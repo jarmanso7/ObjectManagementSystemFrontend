@@ -3,11 +3,10 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
-using System.Dynamic;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-    public partial class GraphVisualizer
+	public partial class GraphVisualizer
     {
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();
@@ -32,14 +31,14 @@ namespace ObjectManagementSystemFrontend.Components
 				Diagram.Nodes.Add(node);
 			}
 
-			//foreach (var relationship in Relationships)
-			//{
-			//	Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.OutV), Diagram.Nodes.First(n => n.Id == relationship.InV))
-			//	{
-			//		SourceMarker = LinkMarker.Arrow,
-			//		TargetMarker = LinkMarker.Arrow
-			//	});
-			//}
+			foreach (var relationship in Relationships)
+			{
+				Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.FromId), Diagram.Nodes.First(n => n.Id == relationship.ToId))
+				{
+					SourceMarker = LinkMarker.Arrow,
+					TargetMarker = LinkMarker.Arrow
+				});
+			}
 		}
 
 
