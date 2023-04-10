@@ -71,7 +71,7 @@ namespace ObjectManagementSystemFrontend.Components
 		/// <returns></returns>
 		private Point GetRandomPointWithinGraphCanvas()
         {
-            return new Point(random.Next(50, 750), random.Next(50, 550));
+            return new Point(random.Next(100, 700), random.Next(11, 500));
         }
 	}
 }

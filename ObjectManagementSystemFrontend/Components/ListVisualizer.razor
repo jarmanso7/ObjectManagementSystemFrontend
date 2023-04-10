@@ -1,5 +1,15 @@
-﻿<h3>ListVisualizer</h3>
+﻿@using ObjectManagementSystemFrontend.Models;
 
-@code {
-
-}
+<RadzenDataGrid AllowFiltering="false"
+                AllowColumnResize="false"
+                AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+                AllowSorting="false" PageSize="5" AllowPaging="true"
+                PagerHorizontalAlign="HorizontalAlign.Left"
+                ShowPagingSummary="true"
+                Data="@Objects" TItem="GeneralObject" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or"
+                @ref="dataGrid">
+    <Columns>
+        <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" />
+        <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" />
+    </Columns>
+</RadzenDataGrid>

@@ -15,6 +15,8 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private GraphVisualizer graphVisualizer;
 
+		private ListVisualizer listVisualizer;
+
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();
@@ -41,6 +43,7 @@ namespace ObjectManagementSystemFrontend.Pages
 			}
 
 			graphVisualizer.LoadData();
+			listVisualizer.Reload();
 		}
 	}
 }

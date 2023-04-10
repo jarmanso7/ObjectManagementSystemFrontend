@@ -1,14 +1,23 @@
 ﻿@page "/"
+@using ObjectManagementSystemFrontend.Models;
 @inject HttpClient Http
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
 <CascadingValue Value=@objects>
-	<CascadingValue Value="@relationships">
-		<GraphVisualizer @ref="graphVisualizer"/>
-	</CascadingValue>
+    <CascadingValue Value="@relationships">
+        <div class="stack-horizontal" style="display: flex;">
+            <div style="height: 600px; width: 800px;">
+                <GraphVisualizer @ref="graphVisualizer" />
+            </div>
+            <div style="height: 600px; width: 600px;">
+                <div style="height: 300px; width: 600px;">
+                    <ListVisualizer @ref="listVisualizer"/>
+                </div>
+                <div style="height: 300px; width: 600px;">
+                    <ListVisualizer />
+                </div>
+            </div>
+        </div>
+    </CascadingValue>
 </CascadingValue> 
