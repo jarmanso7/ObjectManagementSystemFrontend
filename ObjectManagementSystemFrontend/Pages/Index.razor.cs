@@ -43,7 +43,7 @@ namespace ObjectManagementSystemFrontend.Pages
 			}
 
 			graphVisualizer.LoadData();
-			listVisualizer.Reload();
+			await listVisualizer.Reload();
 		}
 	}
 }
