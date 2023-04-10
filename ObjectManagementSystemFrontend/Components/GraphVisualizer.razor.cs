@@ -1,14 +1,49 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Microsoft.AspNetCore.Components;
+using ObjectManagementSystemFrontend.Models;
+using System.Dynamic;
 
 namespace ObjectManagementSystemFrontend.Components
 {
     public partial class GraphVisualizer
     {
+        // Used to position nodes randomly accross the canvas.
+        private Random random = new Random();
+
         private Diagram Diagram { get; set; }
 
-        protected override void OnInitialized()
+        [CascadingParameter]
+		private List<GeneralObject> Objects { get; set; }
+
+		[CascadingParameter]
+		private List<Relationship> Relationships { get; set; }
+
+		public void LoadData()
+		{
+			foreach (var genericObject in Objects)
+			{
+				var node = new NodeModel(genericObject.Id, GetRandomPointWithinGraphCanvas(), RenderLayer.HTML, Shapes.Rectangle)
+				{
+					Title = genericObject.Name
+				};
+
+				Diagram.Nodes.Add(node);
+			}
+
+			//foreach (var relationship in Relationships)
+			//{
+			//	Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.OutV), Diagram.Nodes.First(n => n.Id == relationship.InV))
+			//	{
+			//		SourceMarker = LinkMarker.Arrow,
+			//		TargetMarker = LinkMarker.Arrow
+			//	});
+			//}
+		}
+
+
+		protected override void OnInitialized()
         {
             base.OnInitialized();
 
@@ -29,29 +64,15 @@ namespace ObjectManagementSystemFrontend.Components
             };
 
 			Diagram = new Diagram(options); 
-
-			Setup();
         }
 
-		private void Setup()
-		{
-
-			var node1 = new NodeModel(new Point(50, 50), RenderLayer.HTML, Shapes.Rectangle);
-			var node2 = new NodeModel(new Point(300, 300), RenderLayer.HTML, Shapes.Rectangle);
-			var node3 = new NodeModel(new Point(500, 50), RenderLayer.HTML, Shapes.Rectangle);
-
-
-            Diagram.Nodes.Add(new NodeModel[]{
-                node1,
-                node2,
-                node3
-            });
-
-            Diagram.Links.Add(new LinkModel(node1, node2)
-            {
-                SourceMarker = LinkMarker.Arrow,
-                TargetMarker = LinkMarker.Arrow
-            });
-		}
+		/// <summary>
+		/// Provides a random point inside the canvas of 800x600 where the graph is rendered
+		/// </summary>
+		/// <returns></returns>
+		private Point GetRandomPointWithinGraphCanvas()
+        {
+            return new Point(random.Next(50, 750), random.Next(50, 550));
+        }
 	}
 }
