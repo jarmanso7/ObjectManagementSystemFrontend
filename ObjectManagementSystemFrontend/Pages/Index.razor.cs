@@ -13,11 +13,14 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private List<Relationship> relationships = new List<Relationship>();
 
-		private GraphVisualizer graphVisualizer;
+		private GraphComponent graphVisualizer;
 
-		private ListVisualizer listVisualizer;
+		private ObjectListComponent objectListComponent;
 
-		protected override void OnInitialized()
+		private SelectedObjectComponent selectedObjectComponent;
+
+
+        protected override void OnInitialized()
 		{
 			base.OnInitialized();
 		}
@@ -43,7 +46,8 @@ namespace ObjectManagementSystemFrontend.Pages
 			}
 
 			graphVisualizer.LoadData();
-			await listVisualizer.Reload();
+			await objectListComponent.Reload();
+			await selectedObjectComponent.Reload();
 		}
 	}
 }

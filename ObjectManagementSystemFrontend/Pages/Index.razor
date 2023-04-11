@@ -8,41 +8,14 @@
     <CascadingValue Value="@relationships">
         <div class="stack-horizontal" style="display: flex;">
             <div style="height: 600px; width: 800px;">
-                <GraphVisualizer @ref="graphVisualizer" />
+                <GraphComponent @ref="graphVisualizer" />
             </div>
-            <div style="height: 600px; width: 600px;">
-                <div style="height: 300px; width: 600px;">
-                    <ListVisualizer @ref="listVisualizer"/>
+            <div style="height: 600px; width: 700px;">
+                <div style="height: 300px; width: 700px;">
+                    <ObjectListComponent @ref="objectListComponent"/>
                 </div>
-                <div style="height: 300px; width: 600px; display: flex;">
-                    <div style="height: 300px; width: 300px;">
-                         <RadzenCard>
-                                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Type</RadzenText>
-                                <RadzenTextBox Disabled="true" class="w-100" />
-                            </RadzenCard>
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
-                            <RadzenTextBox Disabled="true" class="w-100" />
-                        </RadzenCard>
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Description</RadzenText>
-                            <RadzenTextBox Disabled="true" class="w-100" />
-                        </RadzenCard>
-                    </div>
-                    <div style="height: 300px; width: 300px;">
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Type</RadzenText>
-                            <RadzenTextBox Disabled="true" class="w-100" />
-                        </RadzenCard>
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name</RadzenText>
-                            <RadzenTextBox Disabled="true" class="w-100" />
-                        </RadzenCard>
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Description</RadzenText>
-                            <RadzenTextBox Disabled="true" class="w-100" />
-                        </RadzenCard>
-                    </div>
+                <div style="height: 300px; width: 700px;">
+                    <SelectedObjectComponent @ref="selectedObjectComponent" />
                 </div>
             </div>
         </div>

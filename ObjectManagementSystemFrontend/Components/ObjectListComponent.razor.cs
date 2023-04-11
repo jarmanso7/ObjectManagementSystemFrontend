@@ -4,7 +4,7 @@ using Radzen.Blazor;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-	public partial class ListVisualizer
+	public partial class ObjectListComponent
 	{
 		[CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }

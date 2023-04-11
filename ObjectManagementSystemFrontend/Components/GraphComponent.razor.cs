@@ -6,7 +6,7 @@ using ObjectManagementSystemFrontend.Models;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-	public partial class GraphVisualizer
+	public partial class GraphComponent
     {
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();
