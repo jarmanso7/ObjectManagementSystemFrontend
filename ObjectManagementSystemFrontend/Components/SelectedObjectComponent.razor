@@ -1,67 +1,69 @@
 ﻿@using ObjectManagementSystemFrontend.Models;
-<RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
-    <HeaderTemplate>
-        <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
-            Properties
-        </RadzenText>
-    </HeaderTemplate>
-    <ChildContent>
-        <RadzenStack Orientation="Orientation.Vertical" Gap="6px">
-            <RadzenStack Orientation="Orientation.Horizontal">
-                <RadzenCard class="w-50">
-                    <RadzenText TextStyle="TextStyle.Subtitle2">Type</RadzenText>
-                    <RadzenTextBox class="w-100" />
-                </RadzenCard>
-                <RadzenCard class="w-50">
-                    <RadzenText TextStyle="TextStyle.Subtitle2">Name</RadzenText>
-                    <RadzenTextBox class="w-100" />
+<div>
+    <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
+        <HeaderTemplate>
+            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
+                Properties
+            </RadzenText>
+        </HeaderTemplate>
+        <ChildContent>
+            <RadzenStack Orientation="Orientation.Vertical" Gap="6px">
+                <RadzenStack Orientation="Orientation.Horizontal">
+                    <RadzenCard class="w-50">
+                        <RadzenText TextStyle="TextStyle.Subtitle2">Type</RadzenText>
+                        <RadzenTextBox class="w-100" />
+                    </RadzenCard>
+                    <RadzenCard class="w-50">
+                        <RadzenText TextStyle="TextStyle.Subtitle2">Name</RadzenText>
+                        <RadzenTextBox class="w-100" />
+                    </RadzenCard>
+                </RadzenStack>
+                <RadzenCard>
+                    <RadzenText TextStyle="TextStyle.Subtitle2">Description</RadzenText>
+                    <RadzenTextArea class="w-100" />
                 </RadzenCard>
             </RadzenStack>
-            <RadzenCard>
-                <RadzenText TextStyle="TextStyle.Subtitle2">Description</RadzenText>
-                <RadzenTextArea class="w-100" />
-            </RadzenCard>
-        </RadzenStack>
-    </ChildContent>
-</RadzenPanel>
-<RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
-    <HeaderTemplate>
-        <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
-            Relationships
-        </RadzenText>
-    </HeaderTemplate>
-    <ChildContent>
-        <RadzenButton ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Click="@InsertRow" Disabled=@(relationshipToInsert != null || relationshipToUpdate != null) />
-        <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                        Data="@Relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px">
-            <Columns>
-                <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="260px" >
-                    <EditTemplate Context="relationship">
-                        <RadzenTextBox @bind-Value="relationship.FromId" Style="width:100%; display: block" Name="Type" />
-                    </EditTemplate>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="260px">
-                    <EditTemplate Context="relationship">
-                        <RadzenTextBox @bind-Value="relationship.Type" Style="width:100%; display: block" Name="Type" />
-                    </EditTemplate>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="250px">
-                    <Template Context="relationship">
-                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(relationship))" @onclick:stopPropagation="true">
-                        </RadzenButton>
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(relationship))" @onclick:stopPropagation="true">
-                        </RadzenButton>
-                    </Template>
-                    <EditTemplate Context="relationship">
-                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@((args) => SaveRow(relationship))">
-                        </RadzenButton>
-                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@((args) => CancelEdit(relationship))">
-                        </RadzenButton>
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(relationship))">
-                        </RadzenButton>
-                    </EditTemplate>
-                </RadzenDataGridColumn>
-            </Columns>
-        </RadzenDataGrid>
-    </ChildContent>
-</RadzenPanel>
+        </ChildContent>
+    </RadzenPanel>
+    <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
+        <HeaderTemplate>
+            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
+                Relationships
+            </RadzenText>
+        </HeaderTemplate>
+        <ChildContent>
+            <RadzenButton ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Click="@InsertRow" Disabled=@(relationshipToInsert != null || relationshipToUpdate != null) />
+            <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" EditMode="DataGridEditMode.Single"
+                            Data="@Relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px">
+                <Columns>
+                    <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="260px" >
+                        <EditTemplate Context="relationship">
+                            <RadzenTextBox @bind-Value="relationship.FromId" Style="width:100%; display: block" Name="Type" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="260px">
+                        <EditTemplate Context="relationship">
+                            <RadzenTextBox @bind-Value="relationship.Type" Style="width:100%; display: block" Name="Type" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="250px">
+                        <Template Context="relationship">
+                            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(relationship))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(relationship))" @onclick:stopPropagation="true">
+                            </RadzenButton>
+                        </Template>
+                        <EditTemplate Context="relationship">
+                            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@((args) => SaveRow(relationship))">
+                            </RadzenButton>
+                            <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@((args) => CancelEdit(relationship))">
+                            </RadzenButton>
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(relationship))">
+                            </RadzenButton>
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </ChildContent>
+    </RadzenPanel>
+</div>
