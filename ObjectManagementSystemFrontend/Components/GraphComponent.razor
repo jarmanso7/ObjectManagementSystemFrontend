@@ -1,4 +1,17 @@
 ﻿<!-- Display the Diagram with nodes and links -->
-<CascadingValue Value="Diagram">
-	<DiagramCanvas></DiagramCanvas>
-</CascadingValue>          
+<div>
+    <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-2" Style="width: 700px;">
+        <HeaderTemplate>
+            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
+                Graph
+            </RadzenText>
+        </HeaderTemplate>
+        <ChildContent>
+        <div id="graph-wrapper" >
+            <CascadingValue Value="Diagram">
+                <DiagramCanvas></DiagramCanvas>
+            </CascadingValue>
+        </div>
+        </ChildContent>
+    </RadzenPanel>
+</div>

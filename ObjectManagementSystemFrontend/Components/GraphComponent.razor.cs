@@ -41,7 +41,6 @@ namespace ObjectManagementSystemFrontend.Components
 			}
 		}
 
-
 		protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -51,18 +50,20 @@ namespace ObjectManagementSystemFrontend.Components
                 DeleteKey = "Delete",
                 DefaultNodeComponent = null,
                 AllowMultiSelection = true,
+				AllowPanning = false,
                 Links = new DiagramLinkOptions
                 {
                     // Options related to links
                 },
                 Zoom = new DiagramZoomOptions
                 {
-                    Minimum = 0.5, // Minimum zoom value
-                    Inverse = false // mouse wheel zoom direction
+					Enabled = false,
                 }
             };
 
-			Diagram = new Diagram(options); 
+			Diagram = new Diagram(options);
+
+			Diagram.SetZoom(0.5);
         }
 
 		/// <summary>
@@ -71,7 +72,7 @@ namespace ObjectManagementSystemFrontend.Components
 		/// <returns></returns>
 		private Point GetRandomPointWithinGraphCanvas()
         {
-            return new Point(random.Next(100, 700), random.Next(11, 500));
+            return new Point(random.Next(100, 1100), random.Next(100, 1100));
         }
 	}
 }
