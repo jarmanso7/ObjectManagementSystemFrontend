@@ -1,21 +1,22 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 @using ObjectManagementSystemFrontend.Models;
 @inject HttpClient Http
 
-<PageTitle>Index</PageTitle>
+@inject IWebAssemblyHostEnvironment HostEnvironment
+
+<PageTitle>Object Management System</PageTitle>
+
+<p>Environment: @HostEnvironment.Environment</p>
 
 <CascadingValue Value=@objects>
     <CascadingValue Value="@relationships">
-        <div class="stack-horizontal" style="display: flex;">
-                <GraphComponent @ref="graphVisualizer" />
-            <div style="height: 600px; width: 700px;">
-                <div style="height: 300px; width: 700px;">
-                    <ObjectListComponent @ref="objectListComponent"/>
-                </div>
-                <div style="height: 300px; width: 700px;">
-                    <SelectedObjectComponent @ref="selectedObjectComponent" />
-                </div>
-            </div>
-        </div>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0">
+            <GraphComponent @ref="graphVisualizer" />
+            <RadzenStack Orientation="Orientation.Vertical" Gap="0">
+                <ObjectListComponent @ref="objectListComponent" />
+                <SelectedObjectComponent @ref="selectedObjectComponent" />
+            </RadzenStack>
+        </RadzenStack>
     </CascadingValue>
 </CascadingValue> 
