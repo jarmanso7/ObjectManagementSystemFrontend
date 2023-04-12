@@ -1,42 +1,43 @@
 ﻿@using ObjectManagementSystemFrontend.Models;
 
-<RadzenButton ButtonStyle="ButtonStyle.Success" Icon="add_circle_outline" class="mt-2 mb-4" Text="Add New Object" Click="@InsertRow" Disabled=@(generalObjectToInsert != null || generalObjectToUpdate != null) />
-<RadzenDataGrid AllowFiltering="false"
-                AllowColumnResize="false"
-                AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
-                AllowSorting="false" PageSize="3" AllowPaging="true"
-                EditMode="DataGridEditMode.Single"
-                PagerHorizontalAlign="HorizontalAlign.Left"
-                ShowPagingSummary="true"
-                Data="@Objects" TItem="GeneralObject" ColumnWidth="110px" LogicalFilterOperator="LogicalFilterOperator.Or"
-                RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset"
-                @ref="dataGrid">
-    <Columns>
-        <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" >
-            <EditTemplate Context="generalObject">
-                <RadzenTextBox @bind-Value="generalObject.Type" Style="width:100%; display: block" Name="Type" />
-            </EditTemplate>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" >
-            <EditTemplate Context="generalObject">
-                <RadzenTextBox @bind-Value="generalObject.Name" Style="width:100%; display: block" Name="Name" />
-            </EditTemplate>
-        </RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="GeneralObject" Context="generalObject" Filterable="false" Sortable="false" Width="80px" Title="Edit Options">
-            <Template Context="generalObject">
-                <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(generalObject))" @onclick:stopPropagation="true">
-                </RadzenButton>
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(generalObject))" @onclick:stopPropagation="true">
-                </RadzenButton>
-            </Template>
-            <EditTemplate Context="generalObject">
-                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(generalObject))">
-                </RadzenButton>
-                <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(generalObject))">
-                </RadzenButton>
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@(args => DeleteRow(generalObject))">
-                </RadzenButton>
-            </EditTemplate>
-        </RadzenDataGridColumn>
-    </Columns>
-</RadzenDataGrid>
+<RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
+    <HeaderTemplate>
+        <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
+            Search Objects
+        </RadzenText>
+    </HeaderTemplate>
+    <ChildContent>
+        <RadzenButton ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Click="@InsertRow" Disabled=@(generalObjectToInsert != null || generalObjectToUpdate != null) />
+        <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" EditMode="DataGridEditMode.Single"
+                        Data="@Objects" TItem="GeneralObject" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px" Density="Density.Compact">
+            <Columns>
+                <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" Width="260px">
+                    <EditTemplate Context="generalObject">
+                        <RadzenTextBox @bind-Value="generalObject.Name" Style="width:100%; display: block" Name="Type" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" Width="260px">
+                    <EditTemplate Context="generalObject">
+                        <RadzenTextBox @bind-Value="generalObject.Type" Style="width:100%; display: block" Name="Type" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="GeneralObject" Title="Options" Context="generalObject" Filterable="false" Sortable="false" Width="250px">
+                    <Template Context="generalObject">
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(generalObject))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(generalObject))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                    </Template>
+                    <EditTemplate Context="generalObject">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@((args) => SaveRow(generalObject))">
+                        </RadzenButton>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@((args) => CancelEdit(generalObject))">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.ExtraSmall" class="my-1 ms-1" Click="@(args => DeleteRow(generalObject))">
+                        </RadzenButton>
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </ChildContent>
+</RadzenPanel>

@@ -9,6 +9,8 @@ namespace ObjectManagementSystemFrontend.Components
 		[CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }
 
+		private IList<GeneralObject> selectedObjects { get; set; }
+
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
 		private GeneralObject generalObjectToInsert;
@@ -19,11 +21,18 @@ namespace ObjectManagementSystemFrontend.Components
 			await dataGrid.Reload();
 		}
 
-		void Reset()
-		{
-			generalObjectToInsert = null;
-			generalObjectToUpdate = null;
-		}
+        void Reset()
+        {
+            generalObjectToInsert = null;
+            generalObjectToUpdate = null;
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+
+            selectedObjects = Objects.Take(1).ToList();
+        }
 
 		async Task EditRow(GeneralObject generalObject)
 		{
@@ -31,19 +40,19 @@ namespace ObjectManagementSystemFrontend.Components
 			await dataGrid.EditRow(generalObject);
 		}
 
-		void OnUpdateRow(GeneralObject generalObject)
-		{
-			if (generalObject == generalObjectToInsert)
-			{
-				generalObjectToInsert = null;
-			}
+        void OnUpdateRow(GeneralObject generalObject)
+        {
+            if (generalObject == generalObjectToInsert)
+            {
+                generalObjectToInsert = null;
+            }
 
-			generalObjectToUpdate = null;
+            generalObjectToUpdate = null;
 
-			// TODO Call the API to update the general object and UPDATE in memory collections
-		}
+            // TODO Call the API to update the relationship and UPDATE in memory collections
+        }
 
-		async Task SaveRow(GeneralObject generalObject)
+        async Task SaveRow(GeneralObject generalObject)
 		{
 			await dataGrid.UpdateRow(generalObject);
 		}
