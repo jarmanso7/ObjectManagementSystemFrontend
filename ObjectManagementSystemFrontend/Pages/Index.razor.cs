@@ -6,8 +6,8 @@ namespace ObjectManagementSystemFrontend.Pages
 {
 	public partial class Index
 	{
-		private const string requestObjectsUri = "https://localhost:7228/objects";
-		private const string requestRelationshipsUri = "https://localhost:7228/relationships";
+		private const string requestObjectsEndpoint = "objects";
+		private const string requestRelationshipsEndpoint = "relationships";
 
 		private List<GeneralObject> objects = new List<GeneralObject>();
 
@@ -32,8 +32,8 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private async Task PopulateDataFromBackend()
 		{
-			var fetchedObjects = await Http.GetFromJsonAsync<GeneralObject[]>(requestObjectsUri);
-			var fetchedRelationships = await Http.GetFromJsonAsync<Relationship[]>(requestRelationshipsUri);
+			var fetchedObjects = await Http.GetFromJsonAsync<GeneralObject[]>(getApiEndpoint(requestObjectsEndpoint));
+			var fetchedRelationships = await Http.GetFromJsonAsync<Relationship[]>(getApiEndpoint(requestRelationshipsEndpoint));
 
 			if (fetchedObjects != null)
 			{
@@ -48,6 +48,11 @@ namespace ObjectManagementSystemFrontend.Pages
 			graphVisualizer.LoadData();
 			await objectListComponent.Reload();
 			await selectedObjectComponent.Reload();
+		}
+
+		private string getApiEndpoint(string relativePath)
+		{
+			return Configuration["ApiRootUri"] + relativePath;
 		}
 	}
 }
