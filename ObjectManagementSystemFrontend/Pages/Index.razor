@@ -9,13 +9,15 @@
 <PageTitle>Object Management System</PageTitle>
 
 <CascadingValue Value=@objects>
-    <CascadingValue Value="@relationships">
-        <RadzenStack Orientation="Orientation.Horizontal" Gap="0">
-            <GraphComponent @ref="graphVisualizer" />
-            <RadzenStack Orientation="Orientation.Vertical" Gap="0">
-                <ObjectListComponent @ref="objectListComponent" />
-                <SelectedObjectComponent @ref="selectedObjectComponent" />
+    <CascadingValue Value=@relationships>
+        <CascadingValue Value=@selectedObject>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0">
+                <GraphComponent @ref="graphComponent" />
+                <RadzenStack Orientation="Orientation.Vertical" Gap="0">
+                    <ObjectListComponent @ref="objectListComponent" />
+                    <SelectedObjectComponent @ref="selectedObjectComponent" />
+                </RadzenStack>
             </RadzenStack>
-        </RadzenStack>
+        </CascadingValue>
     </CascadingValue>
 </CascadingValue> 

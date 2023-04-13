@@ -9,7 +9,10 @@ namespace ObjectManagementSystemFrontend.Components
 		[CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }
 
-		private IList<GeneralObject> selectedObjects { get; set; }
+		[CascadingParameter]
+		private GeneralObject SelectedObject { get; set; }
+
+		private IList<GeneralObject> SelectedObjects { get; set; }
 
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
@@ -31,7 +34,9 @@ namespace ObjectManagementSystemFrontend.Components
         {
             await base.OnInitializedAsync();
 
-            selectedObjects = Objects.Take(1).ToList();
+            SelectedObjects = Objects.Take(1).ToList();
+
+			SelectedObject = SelectedObjects.FirstOrDefault();
         }
 
 		async Task EditRow(GeneralObject generalObject)

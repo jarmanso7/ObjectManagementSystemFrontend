@@ -9,11 +9,13 @@ namespace ObjectManagementSystemFrontend.Pages
 		private const string requestObjectsEndpoint = "objects";
 		private const string requestRelationshipsEndpoint = "relationships";
 
+		private GeneralObject selectedObject;
+
 		private List<GeneralObject> objects = new List<GeneralObject>();
 
 		private List<Relationship> relationships = new List<Relationship>();
 
-		private GraphComponent graphVisualizer;
+		private GraphComponent graphComponent;
 
 		private ObjectListComponent objectListComponent;
 
@@ -23,7 +25,16 @@ namespace ObjectManagementSystemFrontend.Pages
         protected override void OnInitialized()
 		{
 			base.OnInitialized();
-		}
+
+            selectedObject = new GeneralObject
+            {
+                Name = "default",
+                Type = "default",
+                Description = "default",
+                Id = "default"
+            };
+
+        }
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -45,7 +56,7 @@ namespace ObjectManagementSystemFrontend.Pages
 				relationships.AddRange(fetchedRelationships);
 			}
 
-			graphVisualizer.LoadData();
+			graphComponent.LoadData();
 			await objectListComponent.Reload();
 			await selectedObjectComponent.Reload();
 		}

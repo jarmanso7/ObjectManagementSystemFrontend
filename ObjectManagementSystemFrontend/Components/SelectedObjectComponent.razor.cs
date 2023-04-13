@@ -11,6 +11,9 @@ namespace ObjectManagementSystemFrontend.Components
         [CascadingParameter]
         private List<Relationship> Relationships { get; set; }
 
+        [CascadingParameter]
+        private GeneralObject SelectedObject { get; set; }
+
         private Relationship relationshipToInsert;
         private Relationship relationshipToUpdate;
 
