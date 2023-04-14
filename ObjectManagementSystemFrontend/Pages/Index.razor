@@ -10,14 +10,12 @@
 
 <CascadingValue Value=@objects>
     <CascadingValue Value=@relationships>
-        <CascadingValue Value=@selectedObject>
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="0">
-                <GraphComponent @ref="graphComponent" />
-                <RadzenStack Orientation="Orientation.Vertical" Gap="0">
-                    <ObjectListComponent @ref="objectListComponent" />
-                    <SelectedObjectComponent @ref="selectedObjectComponent" />
-                </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" Gap="0">
+            <GraphComponent @ref="graphComponent" />
+            <RadzenStack Orientation="Orientation.Vertical" Gap="0">
+                <ObjectListComponent @ref="objectListComponent" />
+                <SelectedObjectComponent @ref="selectedObjectComponent" />
             </RadzenStack>
-        </CascadingValue>
+        </RadzenStack>
     </CascadingValue>
 </CascadingValue> 

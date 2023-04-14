@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using ObjectManagementSystemFrontend.Models;
+using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 
 namespace ObjectManagementSystemFrontend.Components
@@ -11,11 +13,26 @@ namespace ObjectManagementSystemFrontend.Components
         [CascadingParameter]
         private List<Relationship> Relationships { get; set; }
 
-        [CascadingParameter]
-        private GeneralObject SelectedObject { get; set; }
+        private GeneralObject selectedObject;
 
         private Relationship relationshipToInsert;
         private Relationship relationshipToUpdate;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+
+            selectedObject = StateManager.SelectedObject;
+
+            StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
+        }
+
+        private void OnSelectedObjectChanged(object? sender, GeneralObject e)
+        {
+            JsRuntime.InvokeVoidAsync("alert", "OnSelectedObjectChanged SelectedObjectComponent");
+            selectedObject = e;
+            this.StateHasChanged();
+        }
 
         public async Task Reload()
         {

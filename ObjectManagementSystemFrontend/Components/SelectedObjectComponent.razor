@@ -1,4 +1,8 @@
 ﻿@using ObjectManagementSystemFrontend.Models;
+@using ObjectManagementSystemFrontend.Services;
+@inject StateManager StateManager;
+@inject IJSRuntime JsRuntime;
+
 <div>
     <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
         <HeaderTemplate>
@@ -11,16 +15,16 @@
                 <RadzenStack Orientation="Orientation.Horizontal">
                     <RadzenCard class="w-50">
                         <RadzenText TextStyle="TextStyle.Subtitle2" >Type</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@SelectedObject.Type />
+                        <RadzenTextBox class="w-100" @bind-Value=@selectedObject.Type />
                     </RadzenCard>
                     <RadzenCard class="w-50">
                         <RadzenText TextStyle="TextStyle.Subtitle2" >Name</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@SelectedObject.Name />
+                        <RadzenTextBox class="w-100" @bind-Value=@selectedObject.Name />
                     </RadzenCard>
                 </RadzenStack>
                 <RadzenCard>
                     <RadzenText TextStyle="TextStyle.Subtitle2" >Description</RadzenText>
-                    <RadzenTextArea class="w-100" @bind-Value=@SelectedObject.Description />
+                    <RadzenTextArea class="w-100" @bind-Value=@selectedObject.Description />
                 </RadzenCard>
             </RadzenStack>
         </ChildContent>

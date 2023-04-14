@@ -9,11 +9,6 @@ namespace ObjectManagementSystemFrontend.Components
 		[CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }
 
-		[CascadingParameter]
-		private GeneralObject SelectedObject { get; set; }
-
-		private IList<GeneralObject> SelectedObjects { get; set; }
-
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
 		private GeneralObject generalObjectToInsert;
@@ -33,10 +28,6 @@ namespace ObjectManagementSystemFrontend.Components
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-
-            SelectedObjects = Objects.Take(1).ToList();
-
-			SelectedObject = SelectedObjects.FirstOrDefault();
         }
 
 		async Task EditRow(GeneralObject generalObject)
@@ -56,6 +47,11 @@ namespace ObjectManagementSystemFrontend.Components
 
             // TODO Call the API to update the relationship and UPDATE in memory collections
         }
+
+		void OnSelectRow(GeneralObject selectedObject)
+		{
+			StateManager.SelectedObject = selectedObject;
+		}
 
         async Task SaveRow(GeneralObject generalObject)
 		{
