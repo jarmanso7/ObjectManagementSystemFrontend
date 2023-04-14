@@ -13,8 +13,7 @@ namespace ObjectManagementSystemFrontend.Components
 
         private Diagram Diagram { get; set; }
 
-        [CascadingParameter]
-		private List<GeneralObject> Objects { get; set; }
+		private List<GeneralObject> objects;
 
 		private List<Relationship> relationships;
 
@@ -27,7 +26,9 @@ namespace ObjectManagementSystemFrontend.Components
 		{
 			relationships = StateManager.Relationships.ToList();
 
-			foreach (var genericObject in Objects)
+			objects = StateManager.GeneralObjects.ToList();
+
+			foreach (var genericObject in objects)
 			{
 				var node = new NodeModel(genericObject.Id, GetRandomPointWithinGraphCanvas(), RenderLayer.HTML, Shapes.Rectangle)
 				{

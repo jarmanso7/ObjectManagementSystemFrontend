@@ -46,5 +46,21 @@ namespace ObjectManagementSystemFrontend.Services
         }
 
         public event EventHandler<ObservableCollection<Relationship>> RelationshipsChanged;
+
+        private ObservableCollection<GeneralObject> generalObjects = new();
+        public ObservableCollection<GeneralObject> GeneralObjects
+        {
+            get => generalObjects;
+            set
+            {
+                if (GeneralObjects != value)
+                {
+                    generalObjects = value;
+                    GeneralObjectsChanged?.Invoke(this, generalObjects);
+                }
+            }
+        }
+
+        public event EventHandler<ObservableCollection<GeneralObject>> GeneralObjectsChanged;
     }
 }

@@ -38,7 +38,17 @@ namespace ObjectManagementSystemFrontend.Pages
 				objects.AddRange(fetchedObjects);
 			}
 
-			if (fetchedRelationships != null)
+            if (fetchedObjects != null)
+            {
+                StateManager.GeneralObjects.Clear();
+
+                foreach (var generalObject in fetchedObjects)
+                {
+                    StateManager.GeneralObjects.Add(generalObject);
+                }
+            }
+
+            if (fetchedRelationships != null)
 			{
 				StateManager.Relationships.Clear();
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
 using Radzen.Blazor;
+using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -10,9 +11,6 @@ namespace ObjectManagementSystemFrontend.Components
     /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
     public partial class ObjectListComponent
 	{
-		[CascadingParameter]
-		private List<GeneralObject> Objects { get; set; }
-
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
 		private GeneralObject generalObjectToInsert;
@@ -32,9 +30,16 @@ namespace ObjectManagementSystemFrontend.Components
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+
+            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
         }
 
-		async Task EditRow(GeneralObject generalObject)
+        private void OnGeneralObjectsChanged(object? sender, ObservableCollection<GeneralObject> e)
+        {
+			this.StateHasChanged();
+        }
+
+        async Task EditRow(GeneralObject generalObject)
 		{
 			generalObjectToUpdate = generalObject;
 			await dataGrid.EditRow(generalObject);
@@ -86,10 +91,10 @@ namespace ObjectManagementSystemFrontend.Components
 				generalObjectToUpdate = null;
 			}
 
-			if (Objects.Contains(generalObject))
+			if (StateManager.GeneralObjects.Contains(generalObject))
 			{
 
-				// TODO Trigger delete call to the Backend
+				StateManager.GeneralObjects.Remove(generalObject);
 
 				await dataGrid.Reload();
 			}
