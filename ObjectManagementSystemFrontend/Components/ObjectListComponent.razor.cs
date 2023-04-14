@@ -4,7 +4,11 @@ using Radzen.Blazor;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-	public partial class ObjectListComponent
+    /// <summary>
+    /// Displays interactive information about the available objects.
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
+    public partial class ObjectListComponent
 	{
 		[CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }

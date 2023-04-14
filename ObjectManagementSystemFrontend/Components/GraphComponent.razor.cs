@@ -16,11 +16,17 @@ namespace ObjectManagementSystemFrontend.Components
         [CascadingParameter]
 		private List<GeneralObject> Objects { get; set; }
 
-		[CascadingParameter]
-		private List<Relationship> Relationships { get; set; }
+		private List<Relationship> relationships;
 
-		public void LoadData()
+        public void Reload()
+        {
+			LoadData();
+        }
+
+        public void LoadData()
 		{
+			relationships = StateManager.Relationships.ToList();
+
 			foreach (var genericObject in Objects)
 			{
 				var node = new NodeModel(genericObject.Id, GetRandomPointWithinGraphCanvas(), RenderLayer.HTML, Shapes.Rectangle)
@@ -31,7 +37,7 @@ namespace ObjectManagementSystemFrontend.Components
 				Diagram.Nodes.Add(node);
 			}
 
-			foreach (var relationship in Relationships)
+			foreach (var relationship in relationships)
 			{
 				Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.FromId), Diagram.Nodes.First(n => n.Id == relationship.ToId))
 				{

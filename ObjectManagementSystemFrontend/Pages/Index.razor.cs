@@ -9,31 +9,18 @@ namespace ObjectManagementSystemFrontend.Pages
 		private const string requestObjectsEndpoint = "objects";
 		private const string requestRelationshipsEndpoint = "relationships";
 
-		private GeneralObject selectedObject;
-
 		private List<GeneralObject> objects = new List<GeneralObject>();
-
-		private List<Relationship> relationships = new List<Relationship>();
 
 		private GraphComponent graphComponent;
 
 		private ObjectListComponent objectListComponent;
 
-		private SelectedObjectComponent selectedObjectComponent;
+		private RelationshipListComponent relationshipListComponent;
 
 
         protected override void OnInitialized()
 		{
 			base.OnInitialized();
-
-            selectedObject = new GeneralObject
-            {
-                Name = "default",
-                Type = "default",
-                Description = "default",
-                Id = "default"
-            };
-
         }
 
 		protected override async Task OnInitializedAsync()
@@ -53,12 +40,17 @@ namespace ObjectManagementSystemFrontend.Pages
 
 			if (fetchedRelationships != null)
 			{
-				relationships.AddRange(fetchedRelationships);
+				StateManager.Relationships.Clear();
+
+				foreach (var relationship in fetchedRelationships)
+				{
+                    StateManager.Relationships.Add(relationship);
+                }
 			}
 
-			graphComponent.LoadData();
 			await objectListComponent.Reload();
-			await selectedObjectComponent.Reload();
+			await relationshipListComponent.Reload();
+			graphComponent.Reload();
 		}
 
 		private string getApiEndpoint(string relativePath)

@@ -14,7 +14,7 @@ namespace ObjectManagementSystemFrontend.Services
             get => selectedObject;
             set
             {
-                if (value != selectedObject)
+                if (selectedObject != value)
                 {
                     selectedObject = value;
                     OnSelectedObjectChanged(value);
@@ -26,7 +26,25 @@ namespace ObjectManagementSystemFrontend.Services
 
         private void OnSelectedObjectChanged(GeneralObject generalObject)
         {
-            SelectedObjectChanged?.Invoke(this, SelectedObject);
+            SelectedObjectChanged?.Invoke(this, selectedObject);
         }
+
+        // TODO: load objects and relationships from backend to StateManager
+
+        private ObservableCollection<Relationship> relationships = new();
+        public ObservableCollection<Relationship> Relationships
+        {
+            get => relationships;
+            set
+            {
+                if (relationships != value)
+                {
+                    relationships = value;
+                    RelationshipsChanged?.Invoke(this, relationships);
+                }
+            }
+        }
+
+        public event EventHandler<ObservableCollection<Relationship>> RelationshipsChanged;
     }
 }

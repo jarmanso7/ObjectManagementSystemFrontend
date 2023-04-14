@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-    public partial class SelectedObjectComponent
+    /// <summary>
+    /// Displays interactive information about the relationships of a particular object.
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
+    public partial class RelationshipListComponent
     {
         RadzenDataGrid<Relationship> dataGrid;
 
-        [CascadingParameter]
-        private List<Relationship> Relationships { get; set; }
+        private List<Relationship> relationships;
 
         private GeneralObject selectedObject;
 
@@ -29,8 +31,12 @@ namespace ObjectManagementSystemFrontend.Components
 
         private void OnSelectedObjectChanged(object? sender, GeneralObject e)
         {
-            JsRuntime.InvokeVoidAsync("alert", "OnSelectedObjectChanged SelectedObjectComponent");
             selectedObject = e;
+
+            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
+
+            Reset();
+
             this.StateHasChanged();
         }
 
@@ -92,7 +98,7 @@ namespace ObjectManagementSystemFrontend.Components
                 relationshipToUpdate = null;
             }
 
-            if (Relationships.Contains(relationship))
+            if (relationships.Contains(relationship))
             {
                 // TODO Trigger delete call to the Backend
 
