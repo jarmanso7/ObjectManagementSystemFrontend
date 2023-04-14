@@ -3,6 +3,7 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
+using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -14,10 +15,10 @@ namespace ObjectManagementSystemFrontend.Components
         private Diagram Diagram { get; set; }
 
         [CascadingParameter]
-		private List<GeneralObject> Objects { get; set; }
+		private ObservableCollection<GeneralObject> Objects { get; set; }
 
 		[CascadingParameter]
-		private List<Relationship> Relationships { get; set; }
+		private ObservableCollection<Relationship> Relationships { get; set; }
 
 		public void LoadData()
 		{

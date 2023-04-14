@@ -1,18 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
 using Radzen.Blazor;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ObjectManagementSystemFrontend.Components
 {
 	public partial class ObjectListComponent
 	{
 		[CascadingParameter]
-		private List<GeneralObject> Objects { get; set; }
+		private ObservableCollection<GeneralObject> Objects { get; set; }
 
-		[CascadingParameter]
-		private GeneralObject SelectedObject { get; set; }
+		[Parameter]
+		public GeneralObject SelectedObject { get; set; }
 
-		private IList<GeneralObject> SelectedObjects { get; set; }
+		[Parameter]
+		public EventCallback<GeneralObject> SelectedObjectChanged { get; set; }
+
+		private IList<GeneralObject> selectedObjects;
 
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
@@ -34,10 +39,15 @@ namespace ObjectManagementSystemFrontend.Components
         {
             await base.OnInitializedAsync();
 
-            SelectedObjects = Objects.Take(1).ToList();
-
-			SelectedObject = SelectedObjects.FirstOrDefault();
+			selectedObjects = Objects.Take(1).ToList();
         }
+
+        async Task OnSelectedObjectChanged()
+		{
+			SelectedObject = selectedObjects.FirstOrDefault();
+
+            await SelectedObjectChanged.InvokeAsync(SelectedObject);
+		}
 
 		async Task EditRow(GeneralObject generalObject)
 		{

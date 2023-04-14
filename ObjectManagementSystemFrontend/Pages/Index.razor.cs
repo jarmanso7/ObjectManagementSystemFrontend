@@ -1,5 +1,6 @@
 ﻿using ObjectManagementSystemFrontend.Components;
 using ObjectManagementSystemFrontend.Models;
+using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 
 namespace ObjectManagementSystemFrontend.Pages
@@ -11,9 +12,9 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private GeneralObject selectedObject;
 
-		private List<GeneralObject> objects = new List<GeneralObject>();
+		private ObservableCollection<GeneralObject> objects = new();
 
-		private List<Relationship> relationships = new List<Relationship>();
+		private ObservableCollection<Relationship> relationships = new();
 
 		private GraphComponent graphComponent;
 
@@ -48,12 +49,18 @@ namespace ObjectManagementSystemFrontend.Pages
 
 			if (fetchedObjects != null)
 			{
-				objects.AddRange(fetchedObjects);
+				foreach (var fetchedObject in fetchedObjects)
+				{
+					objects.Add(fetchedObject);
+				}
 			}
 
 			if (fetchedRelationships != null)
 			{
-				relationships.AddRange(fetchedRelationships);
+                foreach (var fetchedRelationship in fetchedRelationships)
+                {
+                    relationships.Add(fetchedRelationship);
+                }
 			}
 
 			graphComponent.LoadData();

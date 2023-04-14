@@ -8,19 +8,9 @@
         </HeaderTemplate>
         <ChildContent>
             <RadzenStack Orientation="Orientation.Vertical" Gap="6px">
-                <RadzenStack Orientation="Orientation.Horizontal">
-                    <RadzenCard class="w-50">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" >Type</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@SelectedObject.Type />
-                    </RadzenCard>
-                    <RadzenCard class="w-50">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" >Name</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@SelectedObject.Name />
-                    </RadzenCard>
-                </RadzenStack>
                 <RadzenCard>
                     <RadzenText TextStyle="TextStyle.Subtitle2" >Description</RadzenText>
-                    <RadzenTextArea class="w-100" @bind-Value=@SelectedObject.Description />
+                    <RadzenTextArea class="w-100" Change=@OnSelectedObjectChanged @bind-Value=@SelectedObject.Description />
                 </RadzenCard>
             </RadzenStack>
         </ChildContent>

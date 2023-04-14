@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
 using Radzen.Blazor;
+using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -9,17 +10,37 @@ namespace ObjectManagementSystemFrontend.Components
         RadzenDataGrid<Relationship> dataGrid;
 
         [CascadingParameter]
-        private List<Relationship> Relationships { get; set; }
+        private ObservableCollection<Relationship> Relationships { get; set; }
 
-        [CascadingParameter]
-        private GeneralObject SelectedObject { get; set; }
+        [Parameter]
+        public GeneralObject SelectedObject { get; set; } = new GeneralObject
+        {
+            Type = "default2",
+            Name = "default2",
+            Description = "default2",
+            Id = "default2"
+        };
+
+        [Parameter]
+        public EventCallback<GeneralObject> SelectedObjectChanged { get; set; }
 
         private Relationship relationshipToInsert;
         private Relationship relationshipToUpdate;
 
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+        }
+
+
         public async Task Reload()
         {
             await dataGrid.Reload();
+        }
+
+        async Task OnSelectedObjectChanged()
+        {
+            await SelectedObjectChanged.InvokeAsync(SelectedObject);
         }
 
         void Reset()
