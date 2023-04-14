@@ -30,7 +30,7 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private async Task PopulateDataFromBackend()
 		{
-			var fetchedObjects = await Http.GetFromJsonAsync<GeneralObject[]>(getApiEndpoint(requestObjectsEndpoint));
+            var fetchedObjects = await Http.GetFromJsonAsync<GeneralObject[]>(getApiEndpoint(requestObjectsEndpoint));
 			var fetchedRelationships = await Http.GetFromJsonAsync<Relationship[]>(getApiEndpoint(requestRelationshipsEndpoint));
 
 			if (fetchedObjects != null)
