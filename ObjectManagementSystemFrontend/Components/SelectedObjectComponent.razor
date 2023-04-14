@@ -6,33 +6,7 @@
 <div>
     <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
         <HeaderTemplate>
-            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
-                Selected object's properties
-            </RadzenText>
-        </HeaderTemplate>
-        <ChildContent>
-            <RadzenStack Orientation="Orientation.Vertical" Gap="6px">
-                <RadzenStack Orientation="Orientation.Horizontal">
-                    <RadzenCard class="w-50">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" >Type</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@selectedObject.Type />
-                    </RadzenCard>
-                    <RadzenCard class="w-50">
-                        <RadzenText TextStyle="TextStyle.Subtitle2" >Name</RadzenText>
-                        <RadzenTextBox class="w-100" @bind-Value=@selectedObject.Name />
-                    </RadzenCard>
-                </RadzenStack>
-                <RadzenCard>
-                    <RadzenText TextStyle="TextStyle.Subtitle2" >Description</RadzenText>
-                    <RadzenTextArea class="w-100" @bind-Value=@selectedObject.Description />
-                </RadzenCard>
-            </RadzenStack>
-        </ChildContent>
-    </RadzenPanel>
-    <RadzenPanel AllowCollapse="true" Class="rz-my-1 rz-mx-auto" Style="width: 700px;">
-        <HeaderTemplate>
-            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2">
-                Selected object's relationships
+            <RadzenText TextStyle="TextStyle.H6" Class="rz-display-flex rz-align-items-center rz-m-2" Text=@(selectedObject.Name + "'s relationships")>
             </RadzenText>
         </HeaderTemplate>
         <ChildContent>
@@ -40,17 +14,22 @@
             <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" EditMode="DataGridEditMode.Single"
                             Data="@Relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px" Density="Density.Compact">
                 <Columns>
-                    <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="260px" >
+                    <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="174px" >
                         <EditTemplate Context="relationship">
-                            <RadzenTextBox @bind-Value="relationship.FromId" Style="width:100%; display: block" Name="Type" />
+                            <RadzenTextBox @bind-Value="relationship.FromId" Style="width:100%; display: block" Name="FromId" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="260px">
+                    <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="173px">
                         <EditTemplate Context="relationship">
                             <RadzenTextBox @bind-Value="relationship.Type" Style="width:100%; display: block" Name="Type" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="250px">
+                    <RadzenDataGridColumn TItem="Relationship" Property="ToId" Title="To" Width="173px">
+                        <EditTemplate Context="relationship">
+                            <RadzenTextBox @bind-Value="relationship.ToId" Style="width:100%; display: block" Name="ToId" />
+                        </EditTemplate>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="100px">
                         <Template Context="relationship">
                             <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(relationship))" @onclick:stopPropagation="true">
                             </RadzenButton>

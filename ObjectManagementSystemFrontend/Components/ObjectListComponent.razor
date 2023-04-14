@@ -14,17 +14,22 @@
                         Data="@Objects" TItem="GeneralObject" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" RowSelect="@OnSelectRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                         Density="Density.Compact" SelectionMode="DataGridSelectionMode.Single" >
             <Columns>
-                <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" Width="260px">
+                <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" Width="100px">
                     <EditTemplate Context="generalObject">
-                        <RadzenTextBox @bind-Value="generalObject.Name" Style="width:100%; display: block" Name="Type" />
+                        <RadzenTextBox @bind-Value="generalObject.Name" Style="width:100%; display: block" Name="Name" />
                     </EditTemplate>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" Width="260px">
+                <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" Width="100px">
                     <EditTemplate Context="generalObject">
                         <RadzenTextBox @bind-Value="generalObject.Type" Style="width:100%; display: block" Name="Type" />
                     </EditTemplate>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="GeneralObject" Title="Options" Context="generalObject" Filterable="false" Sortable="false" Width="250px">
+                <RadzenDataGridColumn TItem="GeneralObject" Property="Description" Title="Description" Width="320px">
+                    <EditTemplate Context="generalObject">
+                        <RadzenTextBox @bind-Value="generalObject.Description" Style="width:100%; display: block" Name="Description" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="GeneralObject" Title="Options" Context="generalObject" Filterable="false" Sortable="false" Width="100px">
                     <Template Context="generalObject">
                         <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" Click="@(args => EditRow(generalObject))" @onclick:stopPropagation="true">
                         </RadzenButton>
