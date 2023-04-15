@@ -34,15 +34,15 @@ namespace ObjectManagementSystemFrontend.Components
             await base.OnInitializedAsync();
 
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
-			StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
+			StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
         }
 
-        private void OnGeneralObjectsChanged(object? sender, ObservableCollection<GeneralObject> e)
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
 			this.StateHasChanged();
         }
 
-		private void OnCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
+		private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
 		{
 			if (sender != this)
 			{
@@ -66,7 +66,7 @@ namespace ObjectManagementSystemFrontend.Components
             generalObjectToUpdate = null;
 
 			//Trigger Save to DB and memory
-			StateManager.InvokeCollectionItemPropertyChanged(this, new CollectionItemPropertyChangedEventArgs { CollectionName = "GeneralObjects", ItemId = generalObject.Id });
+			StateManager.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
         }
 
 		void OnSelectRow(GeneralObject selectedObject)

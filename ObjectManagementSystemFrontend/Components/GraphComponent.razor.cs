@@ -3,6 +3,8 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
+using ObjectManagementSystemFrontend.Services;
+using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -23,20 +25,26 @@ namespace ObjectManagementSystemFrontend.Components
 
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
             StateManager.RelationshipsChanged += OnRelationshipsChanged;
-            StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
-		}
 
-        private void OnCollectionItemPropertyChanged(object? sender, Services.CollectionItemPropertyChangedEventArgs e)
-        {
-            Console.WriteLine($"GraphComponent: OnCollectionItemPropertyChanged, sender: {sender?.ToString()}, collection: {e.CollectionName}, itemId: {e.ItemId}");
+            StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+            StateManager.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
         }
 
-        private void OnRelationshipsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<Relationship> e)
+        private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
+        {
+            Console.WriteLine($"GraphComponent: OnObjectItemPropertyChanged, object Name: {e.Item.Name}");
+        }
+        private void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
+        {
+            Console.WriteLine($"GraphComponent: OnRelationshipItemPropertyChanged, relationship Type: {e.Item.Type}");
+        }
+
+        private void OnRelationshipsChanged(object? sender, StateChangedEventArgs<ObservableCollection<Relationship>> e)
         {
             Console.WriteLine("GraphComponent: OnRelationshipsChanged");
         }
 
-        private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
 			Console.WriteLine("GraphComponent: OnGeneralObjectsChanged");
         }

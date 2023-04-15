@@ -29,21 +29,17 @@ namespace ObjectManagementSystemFrontend.Components
 
             StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
-
-            StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
+            StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
         }
 
-        private void OnCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
+        private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
-            if (sender != this)
-            {
-                Reset();
+            Reset();
 
-                this.StateHasChanged();
-            }
+            this.StateHasChanged();
         }
 
-        private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
             relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
 
@@ -52,9 +48,9 @@ namespace ObjectManagementSystemFrontend.Components
             this.StateHasChanged();
         }
 
-        private void OnSelectedObjectChanged(object? sender, GeneralObject e)
+        private void OnSelectedObjectChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
-            selectedObject = e;
+            selectedObject = e.Item;
 
             relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
 

@@ -7,7 +7,7 @@ namespace ObjectManagementSystemFrontend.Services
     /// <summary>
     /// Manages the in memory data to orchestrate changes in visualization accross the frontend app
     /// </summary>
-    public class StateManager
+    public class StateManager : IDisposable
     {
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
@@ -23,11 +23,14 @@ namespace ObjectManagementSystemFrontend.Services
             }
         }
 
+        /// <summary>
+        /// Notifies of a change of the <see cref="SelectedObject"/>
+        /// </summary>
         public event EventHandler<GeneralObject> SelectedObjectChanged;
 
         private void OnSelectedObjectChanged(GeneralObject generalObject)
         {
-            SelectedObjectChanged?.Invoke(this, selectedObject);
+            SelectedObjectChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(null, generalObject));
         }
 
         // TODO: load objects and relationships from backend to StateManager
@@ -41,11 +44,14 @@ namespace ObjectManagementSystemFrontend.Services
                 if (relationships != value)
                 {
                     relationships = value;
-                    RelationshipsChanged?.Invoke(this, relationships);
+                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
                 }
             }
         }
 
+        /// <summary>
+        /// Notifies on a change in the collection <see cref="Relationships"/>
+        /// </summary>
         public event EventHandler<ObservableCollection<Relationship>> RelationshipsChanged;
 
         private ObservableCollection<GeneralObject> generalObjects = new();
@@ -57,41 +63,71 @@ namespace ObjectManagementSystemFrontend.Services
                 if (GeneralObjects != value)
                 {
                     generalObjects = value;
-                    GeneralObjectsChanged?.Invoke(this, generalObjects);
+                    GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
                 }
             }
         }
 
+        /// <summary>
+        /// Notifies on a change in the collection <see cref="GeneralObjects"/>
+        /// </summary>
         public event EventHandler<ObservableCollection<GeneralObject>> GeneralObjectsChanged;
+
+        /// <summary>
+        /// Notifies on a change in a property of any item in the collection <see cref="GeneralObjects"/>
+        /// </summary>
+        public event EventHandler<GeneralObject> ObjectItemPropertyChanged;
+
+
+        /// <summary>
+        /// Notifies on a change in a property of any item in the collection <see cref="GeneralObjects"/> or <see cref="Relationships"/>
+        /// </summary>
+        public event EventHandler<Relationship> RelationshipItemPropertyChanged;
+
+        /// <summary>
+        /// Enables invocation of ObjectItemPropertyChanged from any component that uses <see cref="StateManager"/>
+        /// </summary>
+        public void InvokeObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
+        {
+            //TODO: trigger database changes using e.
+
+            ObjectItemPropertyChanged?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Enables invocation of RelationshipItemPropertyChanged from any component that uses <see cref="StateManager"/>
+        /// </summary>
+        public void InvokeRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
+        {
+            //TODO: trigger database changes using e.
+
+            RelationshipItemPropertyChanged?.Invoke(this, e);
+        }
 
         public StateManager()
         {
             generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
-        }
-
-        /// <summary>
-        /// Propagates notifications on a change in a property of any item in the collections <see cref="GeneralObjects"/> or <see cref="Relationships"/>
-        /// </summary>
-        public event EventHandler<CollectionItemPropertyChangedEventArgs> CollectionItemPropertyChanged;
-
-        /// <summary>
-        /// Enables invocation of CollectionItemPropertyChanged from any component that uses <see cref="StateManager"/>
-        /// </summary>
-        public void InvokeCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
-        {
-            CollectionItemPropertyChanged?.Invoke(this, e);
+            relationships.CollectionChanged += OnRelationshipsCollectionChanged;
         }
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            GeneralObjectsChanged?.Invoke(this, generalObjects);
+            //TODO: trigger database changes using e.OldItems, e.NewItems and e.Action
+
+            GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
         }
-    }
 
-    public class CollectionItemPropertyChangedEventArgs : EventArgs
-    {
-        public string? CollectionName { get; set; }
+        private void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            //TODO: trigger database changes using e.OldItems, e.NewItems and e.Action
 
-        public string? ItemId { get; set; }
+            RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
+        }
+
+        public void Dispose()
+        {
+            generalObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
+            relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
+        }
     }
 }
