@@ -10,8 +10,8 @@
         </HeaderTemplate>
         <ChildContent>
             <RadzenButton ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Click="@InsertRow" Disabled=@(relationshipToInsert != null || relationshipToUpdate != null || IsDisabled()) />
-            <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="3" AllowSorting="true" EditMode="DataGridEditMode.Single"
-                            Data="@relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px" Density="Density.Compact"
+            <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="6" AllowSorting="true" EditMode="DataGridEditMode.Single"
+                            Data="@relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                             EmptyText=@NoRecordsText()>
                 <Columns>
                     <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="174px" >

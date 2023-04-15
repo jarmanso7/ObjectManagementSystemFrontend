@@ -2,8 +2,6 @@
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics.Tracing;
 
 namespace ObjectManagementSystemFrontend.Components
 {

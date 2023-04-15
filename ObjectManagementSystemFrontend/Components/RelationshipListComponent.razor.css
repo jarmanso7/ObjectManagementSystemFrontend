@@ -1,0 +1,7 @@
+﻿::deep .rz-grid-table td, .rz-grid-table th {
+    padding: 0 10px 0 10px;
+}
+
+::deep .rz-cell-data {
+    line-height: 1;
+}
