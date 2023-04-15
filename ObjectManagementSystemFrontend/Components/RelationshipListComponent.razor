@@ -14,9 +14,9 @@
                             Data="@relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                             EmptyText=@NoRecordsText()>
                 <Columns>
-                    <RadzenDataGridColumn TItem="Relationship" Property="FromId" Title="From" Width="174px" >
+                    <RadzenDataGridColumn TItem="Relationship" Property="From.Name" Title="From" Width="174px" >
                         <EditTemplate Context="relationship">
-                            <RadzenTextBox @bind-Value="relationship.FromId" Style="width:100%; display: block" Name="FromId" />
+                            <RadzenTextBox @bind-Value="relationship.From.Name" Style="width:100%; display: block" Name="FromId" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="173px">
@@ -24,9 +24,9 @@
                             <RadzenAutoComplete @bind-Value=@relationship.Type Data="@GetAllRelationshipTypes()" Name="Type"/>
                         </EditTemplate>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="Relationship" Property="ToId" Title="To" Width="173px">
+                    <RadzenDataGridColumn TItem="Relationship" Property="To.Name" Title="To" Width="173px">
                         <EditTemplate Context="relationship">
-                            <RadzenTextBox @bind-Value="relationship.ToId" Style="width:100%; display: block" Name="ToId" />
+                            <RadzenTextBox @bind-Value="relationship.To.Name" Style="width:100%; display: block" Name="ToId" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="100px">

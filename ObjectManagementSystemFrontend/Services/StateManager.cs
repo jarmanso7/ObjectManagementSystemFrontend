@@ -9,6 +9,8 @@ namespace ObjectManagementSystemFrontend.Services
     /// </summary>
     public class StateManager : IDisposable
     {
+        private readonly BackendDataSerializerService backendDataSerializerService;
+
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
         {
@@ -20,6 +22,7 @@ namespace ObjectManagementSystemFrontend.Services
                     selectedObject = value;
                     OnSelectedObjectChanged(value);
                 }
+            
             }
         }
 
@@ -104,10 +107,27 @@ namespace ObjectManagementSystemFrontend.Services
             RelationshipItemPropertyChanged?.Invoke(this, e);
         }
 
-        public StateManager()
+        public StateManager(BackendDataSerializerService backendDataSerializerService)
         {
+            this.backendDataSerializerService = backendDataSerializerService;
+
             generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
             relationships.CollectionChanged += OnRelationshipsCollectionChanged;
+        }
+
+        public async Task Initialize()
+        {
+            var initialDataLoad = await backendDataSerializerService.FetchData();
+
+            foreach(var generalObject in initialDataLoad.Item1)
+            {
+                generalObjects.Add(generalObject);
+            }
+
+            foreach(var relationship in initialDataLoad.Item2)
+            {
+                relationships.Add(relationship);
+            }
         }
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

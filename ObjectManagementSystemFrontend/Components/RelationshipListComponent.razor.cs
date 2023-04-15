@@ -131,7 +131,9 @@ namespace ObjectManagementSystemFrontend.Components
         {
             relationshipToInsert = new Relationship
             {
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
+                From = new GeneralObject(),
+                To = new GeneralObject()
             };
 
             await dataGrid.InsertRow(relationshipToInsert);
@@ -172,7 +174,7 @@ namespace ObjectManagementSystemFrontend.Components
 
         private void Refresh()
         {
-            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
+            relationships = StateManager.Relationships.Where(r => r.From.Id == selectedObject.Id || r.To.Id == selectedObject.Id).ToList();
 
             Reset();
 

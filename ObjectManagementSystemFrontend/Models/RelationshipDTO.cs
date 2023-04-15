@@ -1,10 +1,10 @@
 ﻿namespace ObjectManagementSystemFrontend.Models
 {
-	public class Relationship
-	{
+    public class RelationshipDTO
+    {
         public string Id { get; set; }
         public string Type { get; set; }
-        public GeneralObject From { get; set; }
-        public GeneralObject To { get; set; }
+        public string FromId { get; set; }
+        public string ToId { get; set; }
     }
 }

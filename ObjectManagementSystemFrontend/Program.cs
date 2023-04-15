@@ -16,10 +16,10 @@ using var configuration = await httpClient.GetAsync(filename);
 
 using var stream = await configuration.Content.ReadAsStreamAsync();
 
-
 builder.Configuration.AddJsonStream(stream);
 
 builder.Services.AddScoped(sp => httpClient);
-builder.Services.AddScoped(sp => new StateManager());
+builder.Services.AddScoped<BackendDataSerializerService>();
+builder.Services.AddScoped<StateManager>();
 
 await builder.Build().RunAsync();

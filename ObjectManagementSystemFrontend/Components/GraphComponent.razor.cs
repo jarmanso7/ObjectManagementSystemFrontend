@@ -72,7 +72,7 @@ namespace ObjectManagementSystemFrontend.Components
 
 			foreach (var relationship in relationships)
 			{
-				Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.FromId), Diagram.Nodes.First(n => n.Id == relationship.ToId))
+				Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.From.Id), Diagram.Nodes.First(n => n.Id == relationship.To.Id))
 				{
 					SourceMarker = LinkMarker.Arrow,
 					TargetMarker = LinkMarker.Arrow
