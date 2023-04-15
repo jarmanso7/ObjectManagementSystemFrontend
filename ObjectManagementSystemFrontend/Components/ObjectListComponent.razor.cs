@@ -54,7 +54,7 @@ namespace ObjectManagementSystemFrontend.Components
 
             generalObjectToUpdate = null;
 
-            // TODO Call the API to update the relationship and UPDATE in memory collections
+			//Trigger Save to DB and memory
         }
 
 		void OnSelectRow(GeneralObject selectedObject)
@@ -107,15 +107,25 @@ namespace ObjectManagementSystemFrontend.Components
 
 		async Task InsertRow()
 		{
-			generalObjectToInsert = new GeneralObject();
+			generalObjectToInsert = new GeneralObject
+			{
+				Id = Guid.NewGuid().ToString()
+			};
+			
 			await dataGrid.InsertRow(generalObjectToInsert);
 		}
 
 		void OnCreateRow(GeneralObject generalObject)
 		{
 			// TODO Call the API to ADD the general object and ADD in memory collections
+			StateManager.GeneralObjects.Add(generalObject);
 
 			generalObjectToInsert = null;
 		}
-	}
+
+        string NoRecordsText()
+        {
+            return "None. Click on \"Add New\" to create an object.";
+        }
+    }
 }

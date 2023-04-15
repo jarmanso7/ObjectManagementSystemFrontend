@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
-using ObjectManagementSystemFrontend.Models;
+﻿using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
+using System.Diagnostics.Tracing;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -27,6 +27,16 @@ namespace ObjectManagementSystemFrontend.Components
             selectedObject = StateManager.SelectedObject;
 
             StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
+            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
+        }
+
+        private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)
+        {
+            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
+
+            Reset();
+
+            this.StateHasChanged();
         }
 
         private void OnSelectedObjectChanged(object? sender, GeneralObject e)
@@ -122,6 +132,31 @@ namespace ObjectManagementSystemFrontend.Components
             // TODO Call the API to ADD the general object and ADD in memory collections
 
             relationshipToInsert = null;
+        }
+
+        string SectionTitle()
+        {
+            if (IsDisabled())
+            {
+                return "Relationships";
+            }
+
+            return $"{selectedObject.Name}'s relationships";
+        }
+
+        string NoRecordsText()
+        {
+            return "None.";
+        }
+
+        bool IsDisabled()
+        {
+            if (string.IsNullOrEmpty(selectedObject?.Name))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

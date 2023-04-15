@@ -17,6 +17,18 @@ namespace ObjectManagementSystemFrontend.Components
 
 		private List<Relationship> relationships;
 
+		protected override async Task OnInitializedAsync()
+		{
+			await base.OnInitializedAsync();
+
+            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
+		}
+
+        private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)
+        {
+			Console.WriteLine("GraphComponent: OnGeneralObjectsChanged");
+        }
+
         public void Reload()
         {
 			LoadData();

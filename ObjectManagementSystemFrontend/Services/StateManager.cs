@@ -1,5 +1,6 @@
 ﻿using ObjectManagementSystemFrontend.Models;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ObjectManagementSystemFrontend.Services
 {
@@ -62,5 +63,15 @@ namespace ObjectManagementSystemFrontend.Services
         }
 
         public event EventHandler<ObservableCollection<GeneralObject>> GeneralObjectsChanged;
+
+        public StateManager()
+        {
+            generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
+        }
+
+        private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            GeneralObjectsChanged?.Invoke(this, generalObjects);
+        }
     }
 }
