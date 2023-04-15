@@ -105,7 +105,6 @@ namespace ObjectManagementSystemFrontend.Components
 
 			if (StateManager.GeneralObjects.Contains(generalObject))
 			{
-
 				StateManager.GeneralObjects.Remove(generalObject);
 
 				await dataGrid.Reload();

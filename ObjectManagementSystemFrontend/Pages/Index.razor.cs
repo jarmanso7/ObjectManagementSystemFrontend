@@ -58,6 +58,7 @@ namespace ObjectManagementSystemFrontend.Pages
                 }
 			}
 
+			//TODO deprecate these Reload() method calls and replace by events of StateManager
 			await objectListComponent.Reload();
 			await relationshipListComponent.Reload();
 			graphComponent.Reload();

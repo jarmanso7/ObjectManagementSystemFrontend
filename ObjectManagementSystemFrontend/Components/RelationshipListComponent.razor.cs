@@ -2,6 +2,7 @@
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics.Tracing;
 
 namespace ObjectManagementSystemFrontend.Components
@@ -30,33 +31,29 @@ namespace ObjectManagementSystemFrontend.Components
             StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
             StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+            StateManager.RelationshipsChanged += OnRelationshipsChanged;
+        }
+
+        private void OnRelationshipsChanged(object src, StateChangedEventArgs<ObservableCollection<Relationship>> args)
+        {
+            Refresh();
         }
 
         private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
-            Reset();
-
-            this.StateHasChanged();
+            Refresh();
         }
 
         private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
-            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
-
-            Reset();
-
-            this.StateHasChanged();
+            Refresh();
         }
 
         private void OnSelectedObjectChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
             selectedObject = e.Item;
 
-            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
-
-            Reset();
-
-            this.StateHasChanged();
+            Refresh();
         }
 
         public async Task Reload()
@@ -86,6 +83,8 @@ namespace ObjectManagementSystemFrontend.Components
             relationshipToUpdate = null;
 
             // TODO Call the API to update the relationship and UPDATE in memory collections
+            StateManager.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
+
         }
 
         async Task SaveRow(Relationship relationship)
@@ -117,9 +116,9 @@ namespace ObjectManagementSystemFrontend.Components
                 relationshipToUpdate = null;
             }
 
-            if (relationships.Contains(relationship))
+            if (StateManager.Relationships.Contains(relationship))
             {
-                // TODO Trigger delete call to the Backend
+                StateManager.Relationships.Remove(relationship);
 
                 await dataGrid.Reload();
             }
@@ -132,13 +131,18 @@ namespace ObjectManagementSystemFrontend.Components
 
         async Task InsertRow()
         {
-            relationshipToInsert = new Relationship();
+            relationshipToInsert = new Relationship
+            {
+                Id = Guid.NewGuid().ToString()
+            };
+
             await dataGrid.InsertRow(relationshipToInsert);
         }
 
         void OnCreateRow(Relationship relationship)
         {
             // TODO Call the API to ADD the general object and ADD in memory collections
+            StateManager.Relationships.Add(relationship);
 
             relationshipToInsert = null;
         }
@@ -166,6 +170,15 @@ namespace ObjectManagementSystemFrontend.Components
             }
 
             return false;
+        }
+
+        private void Refresh()
+        {
+            relationships = StateManager.Relationships.Where(r => r.FromId == selectedObject.Id || r.ToId == selectedObject.Id).ToList();
+
+            Reset();
+
+            this.StateHasChanged();
         }
     }
 }
