@@ -69,9 +69,29 @@ namespace ObjectManagementSystemFrontend.Services
             generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
         }
 
+        /// <summary>
+        /// Propagates notifications on a change in a property of any item in the collections <see cref="GeneralObjects"/> or <see cref="Relationships"/>
+        /// </summary>
+        public event EventHandler<CollectionItemPropertyChangedEventArgs> CollectionItemPropertyChanged;
+
+        /// <summary>
+        /// Enables invocation of CollectionItemPropertyChanged from any component that uses <see cref="StateManager"/>
+        /// </summary>
+        public void InvokeCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
+        {
+            CollectionItemPropertyChanged?.Invoke(this, e);
+        }
+
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             GeneralObjectsChanged?.Invoke(this, generalObjects);
         }
+    }
+
+    public class CollectionItemPropertyChangedEventArgs : EventArgs
+    {
+        public string? CollectionName { get; set; }
+
+        public string? ItemId { get; set; }
     }
 }

@@ -22,7 +22,19 @@ namespace ObjectManagementSystemFrontend.Components
 			await base.OnInitializedAsync();
 
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
+            StateManager.RelationshipsChanged += OnRelationshipsChanged;
+            StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
 		}
+
+        private void OnCollectionItemPropertyChanged(object? sender, Services.CollectionItemPropertyChangedEventArgs e)
+        {
+            Console.WriteLine($"GraphComponent: OnCollectionItemPropertyChanged, sender: {sender?.ToString()}, collection: {e.CollectionName}, itemId: {e.ItemId}");
+        }
+
+        private void OnRelationshipsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<Relationship> e)
+        {
+            Console.WriteLine("GraphComponent: OnRelationshipsChanged");
+        }
 
         private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)
         {

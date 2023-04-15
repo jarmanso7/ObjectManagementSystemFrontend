@@ -1,6 +1,7 @@
 ﻿using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
+using System.Collections.ObjectModel;
 using System.Diagnostics.Tracing;
 
 namespace ObjectManagementSystemFrontend.Components
@@ -28,6 +29,18 @@ namespace ObjectManagementSystemFrontend.Components
 
             StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
+
+            StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
+        }
+
+        private void OnCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
+        {
+            if (sender != this)
+            {
+                Reset();
+
+                this.StateHasChanged();
+            }
         }
 
         private void OnGeneralObjectsChanged(object? sender, System.Collections.ObjectModel.ObservableCollection<GeneralObject> e)

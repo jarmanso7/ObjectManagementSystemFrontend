@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
+using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices.ObjectiveC;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -32,12 +34,21 @@ namespace ObjectManagementSystemFrontend.Components
             await base.OnInitializedAsync();
 
             StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
+			StateManager.CollectionItemPropertyChanged += OnCollectionItemPropertyChanged;
         }
 
         private void OnGeneralObjectsChanged(object? sender, ObservableCollection<GeneralObject> e)
         {
 			this.StateHasChanged();
         }
+
+		private void OnCollectionItemPropertyChanged(object? sender, CollectionItemPropertyChangedEventArgs e)
+		{
+			if (sender != this)
+			{
+				this.StateHasChanged();
+			}
+		}
 
         async Task EditRow(GeneralObject generalObject)
 		{
@@ -55,6 +66,7 @@ namespace ObjectManagementSystemFrontend.Components
             generalObjectToUpdate = null;
 
 			//Trigger Save to DB and memory
+			StateManager.InvokeCollectionItemPropertyChanged(this, new CollectionItemPropertyChangedEventArgs { CollectionName = "GeneralObjects", ItemId = generalObject.Id });
         }
 
 		void OnSelectRow(GeneralObject selectedObject)
