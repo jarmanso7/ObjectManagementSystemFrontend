@@ -10,7 +10,7 @@
         </HeaderTemplate>
         <ChildContent>
             <RadzenButton ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Click="@InsertRow" Disabled=@(relationshipToInsert != null || relationshipToUpdate != null || IsDisabled()) />
-            <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="6" AllowSorting="true" EditMode="DataGridEditMode.Single"
+            <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="5" AllowSorting="true" EditMode="DataGridEditMode.Single"
                             Data="@relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                             EmptyText=@NoRecordsText()>
                 <Columns>
@@ -21,7 +21,7 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="173px">
                         <EditTemplate Context="relationship">
-                            <RadzenTextBox @bind-Value="relationship.Type" Style="width:100%; display: block" Name="Type" />
+                            <RadzenAutoComplete @bind-Value=@relationship.Type Data="@GetAllRelationshipTypes()" Name="Type"/>
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Property="ToId" Title="To" Width="173px">

@@ -178,5 +178,10 @@ namespace ObjectManagementSystemFrontend.Components
 
             this.StateHasChanged();
         }
+
+        private IEnumerable<string> GetAllRelationshipTypes()
+        {
+            return StateManager.Relationships.GroupBy(r => r.Type).Select(grp => grp.First().Type);
+        }
     }
 }
