@@ -2,6 +2,7 @@
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -82,6 +83,11 @@ namespace ObjectManagementSystemFrontend.Components
 
             // TODO Call the API to update the relationship and UPDATE in memory collections
             StateManager.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
+
+        }
+
+        async Task OnSelect(Relationship relationship)
+        {
 
         }
 
@@ -184,6 +190,11 @@ namespace ObjectManagementSystemFrontend.Components
         private IEnumerable<string> GetAllRelationshipTypes()
         {
             return StateManager.Relationships.GroupBy(r => r.Type).Select(grp => grp.First().Type);
+        }
+
+        private IEnumerable<GeneralObject> GetAllObjectsOtherThanSelected()
+        {
+            return StateManager.GeneralObjects.Where(o => o.Id !=  selectedObject.Id);
         }
     }
 }
