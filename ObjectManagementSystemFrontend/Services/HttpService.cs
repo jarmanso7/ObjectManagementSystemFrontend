@@ -1,5 +1,4 @@
 ﻿using ObjectManagementSystemFrontend.DTOs;
-using ObjectManagementSystemFrontend.Models;
 using System.Net.Http.Json;
 
 namespace ObjectManagementSystemFrontend.Services
@@ -28,9 +27,9 @@ namespace ObjectManagementSystemFrontend.Services
         /// Gets the objects via HTTP request.
         /// </summary>
         /// <returns></returns>
-        public async Task<GeneralObject[]> GeneralObjectsHttpRequest()
+        public async Task<GeneralObjectDTO[]> GeneralObjectsHttpRequest()
         {
-            return await httpClient.GetFromJsonAsync<GeneralObject[]>(GetApiEndpoint(requestObjectsEndpoint));
+            return await httpClient.GetFromJsonAsync<GeneralObjectDTO[]>(GetApiEndpoint(requestObjectsEndpoint));
         }
 
         /// <summary>

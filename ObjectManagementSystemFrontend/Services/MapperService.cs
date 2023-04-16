@@ -6,7 +6,7 @@ namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
     ///     Provides conversion methods between DTOs and Model classes.
-    ///     The conversion from JSON to DTO is handled via <see cref="System.Net.Http.Json.HttpClientJsonExtensions"/>
+    ///     The conversion from JSON to DTO is handled in <see cref="HttpService"/>
     /// </summary>
     public class MapperService
     {
@@ -17,23 +17,26 @@ namespace ObjectManagementSystemFrontend.Services
         /// <param name="relationshipsDTO">The relationships dto.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A collection of Relationships</returns>
-        public ReadOnlyCollection<GeneralObject> Map( IEnumerable<GeneralObjectDTO> generalObjectsDTO)
+        public ReadOnlyCollection<GeneralObject>Map( IEnumerable<GeneralObjectDTO> generalObjectsDTO)
         {
             List<GeneralObject> generalObjectCollection = new();
 
-            foreach (var generalObjectDTO in generalObjectsDTO)
+            if (generalObjectsDTO != null)
             {
-                var generalObject = new GeneralObject
+                foreach (var generalObjectDTO in generalObjectsDTO)
                 {
-                    Id = generalObjectDTO.Id,
-                    Type = generalObjectDTO.Type,
-                    Name = generalObjectDTO.Name,
-                    Description = generalObjectDTO.Description
-                };
+                    var generalObject = new GeneralObject
+                    {
+                        Id = generalObjectDTO.Id,
+                        Type = generalObjectDTO.Type,
+                        Name = generalObjectDTO.Name,
+                        Description = generalObjectDTO.Description
+                    };
 
-                generalObjectCollection.Add(generalObject);
+                    generalObjectCollection.Add(generalObject);
+                }
             }
-            
+
             return new ReadOnlyCollection<GeneralObject>(generalObjectCollection);
         }
 
@@ -43,24 +46,52 @@ namespace ObjectManagementSystemFrontend.Services
         /// <param name="relationshipsDTO">The relationships dto.</param>
         /// <param name="objects">The objects.</param>
         /// <returns>A collection of Relationships</returns>
-        public ReadOnlyCollection<Relationship> Map(IEnumerable<RelationshipDTO> relationshipsDTO, IEnumerable<GeneralObject> objects)
+        public ReadOnlyCollection<Relationship>Map(IEnumerable<RelationshipDTO> relationshipsDTO, IEnumerable<GeneralObjectDTO> objectsDTO)
         {
             List<Relationship> relationshipCollection = new();
 
-            foreach (var relationshipDTO in relationshipsDTO)
+            if (relationshipsDTO != null && objectsDTO != null)
             {
-                var relationship = new Relationship
+                foreach (var relationshipDTO in relationshipsDTO)
                 {
-                    Id = relationshipDTO.Id,
-                    Type = relationshipDTO.Type,
-                    From = objects.FirstOrDefault(o => o.Id == relationshipDTO.FromId),
-                    To = objects.FirstOrDefault(o => o.Id == relationshipDTO.ToId)
-                };
+                    var fromObject = objectsDTO.FirstOrDefault(o => o.Id == relationshipDTO.FromId);
+                    var toObject = objectsDTO.FirstOrDefault(o => o.Id == relationshipDTO.ToId);
 
-                relationshipCollection.Add(relationship);
+                    var relationship = Map(relationshipDTO, fromObject, toObject);
+
+                    relationshipCollection.Add(relationship);
+                }
             }
-            
+
             return new ReadOnlyCollection<Relationship>(relationshipCollection);
+        }
+
+        /// <summary>
+        /// Maps <see cref="Relationship" />, which contains some properties of the other relevant type <see cref="GeneralObject" />, to <see cref="RelationshipDTO" />.
+        /// </summary>
+        /// <param name="relationship">The relationship.</param>
+        /// <param name="generalObjectDTO">The general object dto.</param>
+        /// <returns></returns>
+        private Relationship Map(RelationshipDTO relationshipDTO, GeneralObjectDTO from, GeneralObjectDTO to)
+        {
+            return new Relationship
+            {
+                Id = relationshipDTO.Id,
+                Type = relationshipDTO.Type,
+                From = Map(from),
+                To = Map(to)
+            };
+        }
+
+        private GeneralObject Map(GeneralObjectDTO generalObjectDTO)
+        {
+            return new GeneralObject
+            {
+                Id = generalObjectDTO.Id,
+                Type = generalObjectDTO.Type,
+                Name = generalObjectDTO.Name,
+                Description = generalObjectDTO.Description
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ObjectManagementSystemFrontend.Models;
+using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Services
 {
@@ -8,37 +9,30 @@ namespace ObjectManagementSystemFrontend.Services
     public class DataProvisionService
     {
         private readonly HttpService httpService;
-        private readonly MapperService relationshipMapperService;
+        private readonly MapperService mapperService;
 
         public DataProvisionService(
             HttpService httpService,
-            MapperService relationshipMapperService)
+            MapperService mapperService)
         {
             this.httpService = httpService;
-            this.relationshipMapperService = relationshipMapperService;
+            this.mapperService = mapperService;
         }
 
         /// <summary>
         /// Reads the data from the source.
         /// </summary>
         /// <returns></returns>
-        public async Task<(List<GeneralObject>,List<Relationship>)> Read()
+        public async Task<(ReadOnlyCollection<GeneralObject>, ReadOnlyCollection<Relationship>)> Read()
         {
             var objectsResponse = await httpService.GeneralObjectsHttpRequest();
             var relationshipsResponse = await httpService.RelationshipsHttpRequest();
 
-            List<GeneralObject> objects = new();
-            List<Relationship> relationships = new();
+            var objects = mapperService.Map(objectsResponse.AsEnumerable());
 
-            if (objectsResponse != null)
-            {
-                objects.AddRange(objectsResponse);
-            }
-
-            if (relationshipsResponse != null)
-            {
-                relationshipMapperService.Map(relationshipsResponse, objects);
-            }
+            var relationships = mapperService.Map(
+                                        relationshipsResponse.AsEnumerable(),
+                                        objectsResponse.AsEnumerable());
 
             return (objects, relationships);
         }
