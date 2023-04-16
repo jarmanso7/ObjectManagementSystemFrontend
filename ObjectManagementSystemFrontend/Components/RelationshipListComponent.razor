@@ -14,19 +14,22 @@
                             Data="@relationships" TItem="Relationship" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                             EmptyText=@NoRecordsText()>
                 <Columns>
-                    <RadzenDataGridColumn TItem="Relationship" Property="From.Name" Title="From" Width="174px" >
+                    <RadzenDataGridColumn TItem="Relationship" Property="From.Name" Title="From" Width="174px">
                         <EditTemplate Context="relationship">
-                            <RadzenDropDown AllowClear="true" TextProperty="Name" @bind-Value="relationship.From" Data="@GetAllObjectsOtherThanSelected()" Multiple="false" Style="width:100%; display: block" Name="From" />
+                            <RadzenDropDown @ref="fromDropDown" AllowClear="true" Change=@(args => OnDropDownChange(args, toDropDown)) TextProperty="Name" @bind-Value="relationship.From" Data="GetDropDownData(toDropDown)" On Multiple="false" Style="width:100%; display: block" Name="From" />
+                            <RadzenRequiredValidator Text="From is required" Component="From" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Property="Type" Title="Type" Width="173px">
                         <EditTemplate Context="relationship">
-                            <RadzenAutoComplete @bind-Value=@relationship.Type Data="@GetAllRelationshipTypes()" Name="Type"/>
+                            <RadzenAutoComplete @bind-Value=@relationship.Type Data="@GetAllRelationshipTypes()" Style="width:100%; display: block" Name="Type"/>
+                            <RadzenRequiredValidator Text="Type is required" Component="Type" Popup="false" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Property="To.Name" Title="To" Width="173px">
                         <EditTemplate Context="relationship">
-                            <RadzenDropDown AllowClear="true" TextProperty="Name" @bind-Value="relationship.To" Data="@GetAllObjectsOtherThanSelected()" Multiple="false" Style="width:100%; display: block" Name="From" />
+                            <RadzenDropDown @ref="toDropDown" AllowClear="true" Change=@(args => OnDropDownChange(args, fromDropDown)) TextProperty="Name" @bind-Value="relationship.To" Data="GetDropDownData(fromDropDown)" Multiple="false" Style="width:100%; display: block" Name="To" />
+                            <RadzenRequiredValidator Text="To is required" Component="To" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="Relationship" Title="Options" Context="relationship" Filterable="false" Sortable="false" Width="100px">

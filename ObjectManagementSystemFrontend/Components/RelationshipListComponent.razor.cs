@@ -1,15 +1,15 @@
-﻿using ObjectManagementSystemFrontend.Models;
+﻿using Microsoft.AspNetCore.Components;
+using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 
 namespace ObjectManagementSystemFrontend.Components
 {
     /// <summary>
     /// Displays interactive information about the relationships of a particular object.
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
+    /// <seealso cref="ComponentBase" />
     public partial class RelationshipListComponent
     {
         RadzenDataGrid<Relationship> dataGrid;
@@ -20,6 +20,9 @@ namespace ObjectManagementSystemFrontend.Components
 
         private Relationship relationshipToInsert;
         private Relationship relationshipToUpdate;
+
+        private RadzenDropDown<GeneralObject> fromDropDown;
+        private RadzenDropDown<GeneralObject> toDropDown;
 
         protected override async Task OnInitializedAsync()
         {
@@ -83,11 +86,6 @@ namespace ObjectManagementSystemFrontend.Components
 
             // TODO Call the API to update the relationship and UPDATE in memory collections
             StateManager.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
-
-        }
-
-        async Task OnSelect(Relationship relationship)
-        {
 
         }
 
@@ -192,9 +190,29 @@ namespace ObjectManagementSystemFrontend.Components
             return StateManager.Relationships.GroupBy(r => r.Type).Select(grp => grp.First().Type);
         }
 
-        private IEnumerable<GeneralObject> GetAllObjectsOtherThanSelected()
+        private IEnumerable<GeneralObject> GetDropDownData(RadzenDropDown<GeneralObject> theOtherDropDown)
         {
-            return StateManager.GeneralObjects.Where(o => o.Id !=  selectedObject.Id);
+            if(theOtherDropDown?.Value == null)
+            {
+                return StateManager.GeneralObjects.AsEnumerable();
+            }
+
+            if (theOtherDropDown.Value == selectedObject)
+            {
+                return StateManager.GeneralObjects.Where(go => go.Id != selectedObject.Id);
+            }
+               
+            return new GeneralObject[] { selectedObject }.AsEnumerable();
+        }
+
+        private void OnDropDownChange(object args, RadzenDropDown<GeneralObject> theOtherDropDown)
+        {
+            var dropDownSelectedObject = args as GeneralObject;
+
+            if (dropDownSelectedObject == selectedObject)
+            {
+                theOtherDropDown.Reset();
+            }
         }
     }
 }
