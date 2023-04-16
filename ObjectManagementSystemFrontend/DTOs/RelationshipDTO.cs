@@ -1,4 +1,4 @@
-﻿namespace ObjectManagementSystemFrontend.Models
+﻿namespace ObjectManagementSystemFrontend.DTOs
 {
     public class RelationshipDTO
     {

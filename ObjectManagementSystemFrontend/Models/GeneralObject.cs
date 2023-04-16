@@ -1,6 +1,9 @@
 ﻿namespace ObjectManagementSystemFrontend.Models
 {
-	public class GeneralObject
+    /// <summary>
+    /// Represents a General Object in the Object Management System
+    /// </summary>
+    public class GeneralObject
 	{
 		public string Id { get; set; }
 		public string Type { get; set; }

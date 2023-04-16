@@ -5,15 +5,33 @@ using System.Collections.Specialized;
 namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
-    /// Manages the in memory data and orchestrates changes accross the frontend application
+    ///     Manages the in-memory data and orchestrates changes accross the frontend application.
     /// </summary>
     public class StateManagerService : IDisposable
     {
-        // Indicates whether the application data has been initialized or not.
-        private bool isInitialized = false;
+        /// <summary>
+        ///     Indicates whether the initial load of data has been performed or not.
+        ///     StateManagerService uses this flag to determine if data is to
+        ///     be saved to the backend when a relevant event is triggered (true),
+        ///     or if it should no attempt to persist data to the backend because the
+        ///     application is not fully initialized.
+        /// </summary>
 
-        private readonly DataProviderService dataProviderService;
+        private bool dataIsInitialized = false;
+
+        private readonly DataProvisionService dataProviderService;
         private readonly DataPersistenceService dataPersistenceService;
+
+        public StateManagerService(
+                    DataProvisionService dataProviderService,
+                    DataPersistenceService dataPersistenceService)
+        {
+            this.dataProviderService = dataProviderService;
+            this.dataPersistenceService = dataPersistenceService;
+
+            GeneralObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
+            Relationships.CollectionChanged += OnRelationshipsCollectionChanged;
+        }
 
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
@@ -30,7 +48,6 @@ namespace ObjectManagementSystemFrontend.Services
             }
         }
 
-        // TODO: load objects and relationships from backend to StateManager
         public ObservableCollection<Relationship> Relationships { get; set; } = new();
         public ObservableCollection<GeneralObject> GeneralObjects { get; set; } = new();
 
@@ -70,7 +87,7 @@ namespace ObjectManagementSystemFrontend.Services
         {
             ObjectItemPropertyChanged?.Invoke(this, e);
 
-            if (isInitialized)
+            if (dataIsInitialized)
             {
                 dataPersistenceService.Update(e.Item);
             }
@@ -83,43 +100,42 @@ namespace ObjectManagementSystemFrontend.Services
         {
             RelationshipItemPropertyChanged?.Invoke(this, e);
 
-            if (isInitialized)
+            if (dataIsInitialized)
             {
                 dataPersistenceService.Update(e.Item);
             }
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             GeneralObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
             Relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
         }
 
-        public StateManagerService(DataProviderService dataProviderService,
-                                    DataPersistenceService dataPersistenceService)
-        {
-            this.dataProviderService = dataProviderService;
-            this.dataPersistenceService = dataPersistenceService;
-
-            GeneralObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
-            Relationships.CollectionChanged += OnRelationshipsCollectionChanged;
-        }
-
+        /// <summary>
+        /// Initialization of the root page component. All the existing Objects and their relationships are loaded at once from the backend on initialization.
+        /// </summary>
         public async Task Initialize()
         {
             var initialDataLoad = await dataProviderService.Read();
 
-            foreach(var generalObject in initialDataLoad.Item1)
+            var generalObjects = initialDataLoad.Item1;
+            var relationships = initialDataLoad.Item2;
+
+            foreach (var generalObject in generalObjects)
             {
                 GeneralObjects.Add(generalObject);
             }
 
-            foreach(var relationship in initialDataLoad.Item2)
+            foreach(var relationship in relationships)
             {
                 Relationships.Add(relationship);
             }
 
-            isInitialized = true;
+            dataIsInitialized = true;
 
             Reload.Invoke(this, new EventArgs());
         }
@@ -128,7 +144,7 @@ namespace ObjectManagementSystemFrontend.Services
         {
             GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", GeneralObjects));
 
-            if (isInitialized)
+            if (dataIsInitialized)
             {
                 switch (e.Action)
                 {
@@ -146,7 +162,7 @@ namespace ObjectManagementSystemFrontend.Services
         {
             RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", Relationships));
 
-            if (isInitialized)
+            if (dataIsInitialized)
             {
                 switch (e.Action)
                 {

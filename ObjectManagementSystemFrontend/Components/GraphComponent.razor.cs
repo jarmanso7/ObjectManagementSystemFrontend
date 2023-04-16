@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-    public partial class GraphComponent
+    public partial class GraphComponent : IDisposable
     {
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();
@@ -114,5 +114,19 @@ namespace ObjectManagementSystemFrontend.Components
         {
             return new Point(random.Next(100, 1100), random.Next(100, 1100));
         }
-	}
+
+        public void Dispose()
+        {
+            if (StateManagerService != null)
+            {
+                StateManagerService.GeneralObjectsChanged -= OnGeneralObjectsChanged;
+                StateManagerService.RelationshipsChanged -= OnRelationshipsChanged;
+
+                StateManagerService.ObjectItemPropertyChanged -= OnObjectItemPropertyChanged;
+                StateManagerService.RelationshipItemPropertyChanged -= OnRelationshipItemPropertyChanged;
+
+                StateManagerService.Reload -= OnReloadRequest;
+            }
+        }
+    }
 }

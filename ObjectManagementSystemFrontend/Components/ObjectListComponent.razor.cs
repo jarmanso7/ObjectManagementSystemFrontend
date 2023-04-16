@@ -9,7 +9,7 @@ namespace ObjectManagementSystemFrontend.Components
     /// Displays interactive information about the available objects.
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
-    public partial class ObjectListComponent
+    public partial class ObjectListComponent : IDisposable
 	{
 		private RadzenDataGrid<GeneralObject> dataGrid;
 
@@ -140,6 +140,16 @@ namespace ObjectManagementSystemFrontend.Components
         private IEnumerable<string> GetAllObjectTypes()
         {
             return StateManagerService.GeneralObjects.GroupBy(r => r.Type).Select(grp => grp.First().Type);
+        }
+
+        public void Dispose()
+        {
+            if (StateManagerService != null)
+            {
+                StateManagerService.GeneralObjectsChanged -= OnGeneralObjectsChanged;
+                StateManagerService.ObjectItemPropertyChanged -= OnObjectItemPropertyChanged;
+                StateManagerService.Reload -= OnReloadRequest;
+            }
         }
     }
 }

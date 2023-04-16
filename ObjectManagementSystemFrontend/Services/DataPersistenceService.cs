@@ -3,10 +3,17 @@
 namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
-    /// Persists data to an external storage system, in this case through a web API
+    /// Persists data to an external storage system.
     /// </summary>
     public class DataPersistenceService
     {
+        private readonly HttpClient httpClient;
+
+        public DataPersistenceService(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
+
         /// <summary>
         /// Creates the specified item.
         /// </summary>
@@ -15,6 +22,7 @@ namespace ObjectManagementSystemFrontend.Services
         public void Create<T>(T item)
         {
             Console.WriteLine($"Create: {JsonSerializer.Serialize(item)}");
+
         }
         /// <summary>
         /// Deletes the specified item.

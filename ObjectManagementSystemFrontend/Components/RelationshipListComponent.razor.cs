@@ -10,7 +10,7 @@ namespace ObjectManagementSystemFrontend.Components
     /// Displays interactive information about the relationships of a particular object.
     /// </summary>
     /// <seealso cref="ComponentBase" />
-    public partial class RelationshipListComponent
+    public partial class RelationshipListComponent : IDisposable
     {
         RadzenDataGrid<Relationship> dataGrid;
 
@@ -210,6 +210,18 @@ namespace ObjectManagementSystemFrontend.Components
             if (dropDownSelectedObject == selectedObject)
             {
                 theOtherDropDown.Reset();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (StateManagerService != null)
+            {
+                StateManagerService.SelectedObjectChanged -= OnSelectedObjectChanged;
+                StateManagerService.GeneralObjectsChanged -= OnGeneralObjectsChanged;
+                StateManagerService.ObjectItemPropertyChanged -= OnObjectItemPropertyChanged;
+                StateManagerService.RelationshipsChanged -= OnRelationshipsChanged;
+                StateManagerService.Reload -= OnReloadRequest;
             }
         }
     }
