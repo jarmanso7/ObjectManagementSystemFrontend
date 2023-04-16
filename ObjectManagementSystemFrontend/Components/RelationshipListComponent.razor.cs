@@ -28,12 +28,12 @@ namespace ObjectManagementSystemFrontend.Components
         {
             await base.OnInitializedAsync();
 
-            selectedObject = StateManager.SelectedObject;
+            selectedObject = StateManagerService.SelectedObject;
 
-            StateManager.SelectedObjectChanged += OnSelectedObjectChanged;
-            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
-            StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
-            StateManager.RelationshipsChanged += OnRelationshipsChanged;
+            StateManagerService.SelectedObjectChanged += OnSelectedObjectChanged;
+            StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
+            StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+            StateManagerService.RelationshipsChanged += OnRelationshipsChanged;
         }
 
         private void OnRelationshipsChanged(object src, StateChangedEventArgs<ObservableCollection<Relationship>> args)
@@ -85,7 +85,7 @@ namespace ObjectManagementSystemFrontend.Components
             relationshipToUpdate = null;
 
             // TODO Call the API to update the relationship and UPDATE in memory collections
-            StateManager.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
+            StateManagerService.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
 
         }
 
@@ -118,9 +118,9 @@ namespace ObjectManagementSystemFrontend.Components
                 relationshipToUpdate = null;
             }
 
-            if (StateManager.Relationships.Contains(relationship))
+            if (StateManagerService.Relationships.Contains(relationship))
             {
-                StateManager.Relationships.Remove(relationship);
+                StateManagerService.Relationships.Remove(relationship);
 
                 await dataGrid.Reload();
             }
@@ -146,7 +146,7 @@ namespace ObjectManagementSystemFrontend.Components
         void OnCreateRow(Relationship relationship)
         {
             // TODO Call the API to ADD the general object and ADD in memory collections
-            StateManager.Relationships.Add(relationship);
+            StateManagerService.Relationships.Add(relationship);
 
             relationshipToInsert = null;
         }
@@ -178,7 +178,7 @@ namespace ObjectManagementSystemFrontend.Components
 
         private void Refresh()
         {
-            relationships = StateManager.Relationships.Where(r => r.From.Id == selectedObject.Id || r.To.Id == selectedObject.Id).ToList();
+            relationships = StateManagerService.Relationships.Where(r => r.From.Id == selectedObject.Id || r.To.Id == selectedObject.Id).ToList();
 
             Reset();
 
@@ -187,19 +187,19 @@ namespace ObjectManagementSystemFrontend.Components
 
         private IEnumerable<string> GetAllRelationshipTypes()
         {
-            return StateManager.Relationships.GroupBy(r => r.Type).Select(grp => grp.First().Type);
+            return StateManagerService.Relationships.GroupBy(r => r.Type).Select(grp => grp.First().Type);
         }
 
         private IEnumerable<GeneralObject> GetDropDownData(RadzenDropDown<GeneralObject> theOtherDropDown)
         {
             if(theOtherDropDown?.Value == null)
             {
-                return StateManager.GeneralObjects.AsEnumerable();
+                return StateManagerService.GeneralObjects.AsEnumerable();
             }
 
             if (theOtherDropDown.Value == selectedObject)
             {
-                return StateManager.GeneralObjects.Where(go => go.Id != selectedObject.Id);
+                return StateManagerService.GeneralObjects.Where(go => go.Id != selectedObject.Id);
             }
                
             return new GeneralObject[] { selectedObject }.AsEnumerable();

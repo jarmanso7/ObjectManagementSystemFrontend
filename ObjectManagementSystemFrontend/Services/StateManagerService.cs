@@ -5,11 +5,16 @@ using System.Collections.Specialized;
 namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
-    /// Manages the in memory data to orchestrate changes in visualization accross the frontend app
+    /// Manages the in memory data and orchestrates changes accross the frontend application
     /// </summary>
-    public class StateManager : IDisposable
+    public class StateManagerService : IDisposable
     {
-        private readonly BackendDataSerializerService backendDataSerializerService;
+        /// <summary>
+        /// Indicates if initial load of data has been performed.
+        /// </summary>
+        private bool dataIsLoadedFromBackend = false;
+
+        private readonly DataProviderService backendDataSerializerService;
 
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
@@ -107,7 +112,7 @@ namespace ObjectManagementSystemFrontend.Services
             RelationshipItemPropertyChanged?.Invoke(this, e);
         }
 
-        public StateManager(BackendDataSerializerService backendDataSerializerService)
+        public StateManagerService(DataProviderService backendDataSerializerService)
         {
             this.backendDataSerializerService = backendDataSerializerService;
 
@@ -128,12 +133,13 @@ namespace ObjectManagementSystemFrontend.Services
             {
                 relationships.Add(relationship);
             }
+
+            dataIsLoadedFromBackend = true;
         }
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             //TODO: trigger database changes using e.OldItems, e.NewItems and e.Action
-
             GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
         }
 

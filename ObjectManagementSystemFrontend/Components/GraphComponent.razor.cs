@@ -23,11 +23,11 @@ namespace ObjectManagementSystemFrontend.Components
 		{
 			await base.OnInitializedAsync();
 
-            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
-            StateManager.RelationshipsChanged += OnRelationshipsChanged;
+            StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
+            StateManagerService.RelationshipsChanged += OnRelationshipsChanged;
 
-            StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
-            StateManager.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
+            StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+            StateManagerService.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
         }
 
         private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
@@ -56,9 +56,9 @@ namespace ObjectManagementSystemFrontend.Components
 
         public void LoadData()
 		{
-			relationships = StateManager.Relationships.ToList();
+			relationships = StateManagerService.Relationships.ToList();
 
-			objects = StateManager.GeneralObjects.ToList();
+			objects = StateManagerService.GeneralObjects.ToList();
 
 			foreach (var genericObject in objects)
 			{

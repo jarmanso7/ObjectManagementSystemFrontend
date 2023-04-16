@@ -19,7 +19,8 @@ using var stream = await configuration.Content.ReadAsStreamAsync();
 builder.Configuration.AddJsonStream(stream);
 
 builder.Services.AddScoped(sp => httpClient);
-builder.Services.AddScoped<BackendDataSerializerService>();
-builder.Services.AddScoped<StateManager>();
+builder.Services.AddScoped<DataProviderService>();
+builder.Services.AddScoped<StateManagerService>();
+builder.Services.AddScoped<PersistenceService>();
 
 await builder.Build().RunAsync();

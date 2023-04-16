@@ -33,8 +33,8 @@ namespace ObjectManagementSystemFrontend.Components
         {
             await base.OnInitializedAsync();
 
-            StateManager.GeneralObjectsChanged += OnGeneralObjectsChanged;
-			StateManager.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+            StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
+			StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
         }
 
         private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
@@ -66,12 +66,12 @@ namespace ObjectManagementSystemFrontend.Components
             generalObjectToUpdate = null;
 
 			//Trigger Save to DB and memory
-			StateManager.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
+			StateManagerService.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
         }
 
 		void OnSelectRow(GeneralObject selectedObject)
 		{
-			StateManager.SelectedObject = selectedObject;
+			StateManagerService.SelectedObject = selectedObject;
 		}
 
         async Task SaveRow(GeneralObject generalObject)
@@ -103,9 +103,9 @@ namespace ObjectManagementSystemFrontend.Components
 				generalObjectToUpdate = null;
 			}
 
-			if (StateManager.GeneralObjects.Contains(generalObject))
+			if (StateManagerService.GeneralObjects.Contains(generalObject))
 			{
-				StateManager.GeneralObjects.Remove(generalObject);
+				StateManagerService.GeneralObjects.Remove(generalObject);
 
 				await dataGrid.Reload();
 			}
@@ -129,7 +129,7 @@ namespace ObjectManagementSystemFrontend.Components
 		void OnCreateRow(GeneralObject generalObject)
 		{
 			// TODO Call the API to ADD the general object and ADD in memory collections
-			StateManager.GeneralObjects.Add(generalObject);
+			StateManagerService.GeneralObjects.Add(generalObject);
 
 			generalObjectToInsert = null;
 		}

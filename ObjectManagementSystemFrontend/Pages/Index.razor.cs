@@ -1,10 +1,9 @@
 ﻿using ObjectManagementSystemFrontend.Components;
-using ObjectManagementSystemFrontend.Models;
 
 
 namespace ObjectManagementSystemFrontend.Pages
 {
-	public partial class Index
+    public partial class Index
 	{
 		private GraphComponent graphComponent;
 
@@ -25,7 +24,7 @@ namespace ObjectManagementSystemFrontend.Pages
 
 		private async Task PopulateData()
 		{
-			await StateManager.Initialize();
+			await StateManagerService.Initialize();
 
 			//TODO deprecate these Reload() method calls and replace by events of StateManager
 			await objectListComponent.Reload();

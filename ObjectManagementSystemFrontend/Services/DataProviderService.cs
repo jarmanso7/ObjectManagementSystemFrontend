@@ -1,13 +1,12 @@
 ﻿using ObjectManagementSystemFrontend.Models;
-using System.Collections.ObjectModel;
 using System.Net.Http.Json;
 
 namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
-    /// Serializes data (objects and relationships) coming from the backend to the models <see cref="GeneralObject"/> and <see cref="Relationship"/>
+    /// Provides the application data from an external source, in this case a web API.
     /// </summary>
-    public class BackendDataSerializerService
+    public class DataProviderService
     {
         private const string requestObjectsEndpoint = "objects";
         private const string requestRelationshipsEndpoint = "relationships";
@@ -15,7 +14,7 @@ namespace ObjectManagementSystemFrontend.Services
         private readonly HttpClient httpClient;
         private readonly IConfiguration configuration;
 
-        public BackendDataSerializerService(
+        public DataProviderService(
             HttpClient httpClient,
             IConfiguration configuration)
         {
