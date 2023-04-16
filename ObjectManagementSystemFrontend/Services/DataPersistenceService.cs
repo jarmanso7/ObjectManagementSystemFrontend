@@ -1,6 +1,6 @@
 ﻿using ObjectManagementSystemFrontend.Models;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ObjectManagementSystemFrontend.Services
 {
@@ -9,24 +9,18 @@ namespace ObjectManagementSystemFrontend.Services
     /// </summary>
     public class DataPersistenceService
     {
-        public void OnGeneralObjectsChanged()
+        public void Create<T>(T item)
         {
-            Console.WriteLine("Write collection of objects to the backend");
+            Console.WriteLine($"Create: {JsonSerializer.Serialize(item)}");
+        }
+        public void Delete<T>(T item)
+        {
+            Console.WriteLine($"Delete: {JsonSerializer.Serialize(item)}");
         }
 
-        public void OnRelationshipsChanged()
+        public void Update<T>(T item)
         {
-            Console.WriteLine("Write collection of relationships to the backend");
-        }
-
-        public void OnObjectItemPropertyChanged()
-        {
-            Console.WriteLine("Update object to the backend");
-        }
-
-        public void OnRelationshipItemPropertyChanged()
-        {
-            Console.WriteLine("Update relationship to the backend");
+            Console.WriteLine($"Update: {JsonSerializer.Serialize(item)}");
         }
     }
 }

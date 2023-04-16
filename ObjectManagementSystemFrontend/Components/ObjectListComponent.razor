@@ -18,16 +18,19 @@
                     <RadzenDataGridColumn TItem="GeneralObject" Property="Name" Title="Name" Width="100px">
                         <EditTemplate Context="generalObject">
                             <RadzenTextBox @bind-Value="generalObject.Name" Style="width:100%; display: block" Name="Name" />
+                            <RadzenRequiredValidator Text="Name is required" Component="Name" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="GeneralObject" Property="Type" Title="Type" Width="100px">
                         <EditTemplate Context="generalObject">
-                            <RadzenTextBox @bind-Value="generalObject.Type" Style="width:100%; display: block" Name="Type" />
+                            <RadzenAutoComplete @bind-Value=@generalObject.Type Data="@GetAllObjectTypes()" Style="width:100%; display: block" Name="Type" />
+                            <RadzenRequiredValidator Text="Type is required" Component="Type" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="GeneralObject" Property="Description" Title="Description" Width="320px">
                         <EditTemplate Context="generalObject">
                             <RadzenTextBox @bind-Value="generalObject.Description" Style="width:100%; display: block" Name="Description" />
+                            <RadzenRequiredValidator Text="Description is required" Component="Description" />
                         </EditTemplate>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="GeneralObject" Title="Options" Context="generalObject" Filterable="false" Sortable="false" Width="100px">

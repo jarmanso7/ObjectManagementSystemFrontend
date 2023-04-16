@@ -126,7 +126,6 @@ namespace ObjectManagementSystemFrontend.Components
 
 		void OnCreateRow(GeneralObject generalObject)
 		{
-			// TODO Call the API to ADD the general object and ADD in memory collections
 			StateManagerService.GeneralObjects.Add(generalObject);
 
 			generalObjectToInsert = null;
@@ -135,6 +134,11 @@ namespace ObjectManagementSystemFrontend.Components
         string NoRecordsText()
         {
             return "None. Click on \"Add New\" to create an object.";
+        }
+
+        private IEnumerable<string> GetAllObjectTypes()
+        {
+            return StateManagerService.GeneralObjects.GroupBy(r => r.Type).Select(grp => grp.First().Type);
         }
     }
 }

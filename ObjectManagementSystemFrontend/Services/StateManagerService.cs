@@ -50,12 +50,6 @@ namespace ObjectManagementSystemFrontend.Services
                 if (relationships != value)
                 {
                     relationships = value;
-                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
-
-                    if (isInitialized)
-                    {
-                        dataPersistenceService.OnRelationshipsChanged();
-                    }
                 }
             }
         }
@@ -74,12 +68,6 @@ namespace ObjectManagementSystemFrontend.Services
                 if (GeneralObjects != value)
                 {
                     generalObjects = value;
-                    GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
-
-                    if (isInitialized)
-                    {
-                        dataPersistenceService.OnGeneralObjectsChanged();
-                    }
                 }
             }
         }
@@ -109,7 +97,7 @@ namespace ObjectManagementSystemFrontend.Services
 
             if (isInitialized)
             {
-                dataPersistenceService.OnObjectItemPropertyChanged();
+                dataPersistenceService.Update(e.Item);
             }
         }
 
@@ -122,7 +110,7 @@ namespace ObjectManagementSystemFrontend.Services
 
             if (isInitialized)
             {
-                dataPersistenceService.OnObjectItemPropertyChanged();
+                dataPersistenceService.Update(e.Item);
             }
         }
 
@@ -159,7 +147,15 @@ namespace ObjectManagementSystemFrontend.Services
 
             if (isInitialized)
             {
-                dataPersistenceService.OnGeneralObjectsChanged();
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        dataPersistenceService.Create(e.NewItems?.Cast<GeneralObject>().FirstOrDefault());
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        dataPersistenceService.Delete(e.OldItems?.Cast<GeneralObject>().FirstOrDefault());
+                        break;
+                }
             };
         }
 
@@ -169,7 +165,15 @@ namespace ObjectManagementSystemFrontend.Services
 
             if (isInitialized)
             {
-                dataPersistenceService.OnRelationshipsChanged();
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        dataPersistenceService.Create(e.NewItems?.Cast<Relationship>().FirstOrDefault());
+                        break;
+                    case NotifyCollectionChangedAction.Remove:
+                        dataPersistenceService.Delete(e.OldItems?.Cast<Relationship>().FirstOrDefault());
+                        break;
+                }
             };
         }
 

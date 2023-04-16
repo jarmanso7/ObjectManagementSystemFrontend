@@ -45,7 +45,7 @@ namespace ObjectManagementSystemFrontend.Components
 
         private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
-			Console.WriteLine("GraphComponent: OnGeneralObjectsChanged");
+			Console.WriteLine("GraphComponent: ChangeGeneralObjectsCollection");
         }
 
         public void Reload()

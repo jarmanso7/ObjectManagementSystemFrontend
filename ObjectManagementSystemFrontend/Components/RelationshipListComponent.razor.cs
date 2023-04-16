@@ -84,9 +84,7 @@ namespace ObjectManagementSystemFrontend.Components
 
             relationshipToUpdate = null;
 
-            // TODO Call the API to update the relationship and UPDATE in memory collections
             StateManagerService.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
-
         }
 
         async Task SaveRow(Relationship relationship)
@@ -145,7 +143,6 @@ namespace ObjectManagementSystemFrontend.Components
 
         void OnCreateRow(Relationship relationship)
         {
-            // TODO Call the API to ADD the general object and ADD in memory collections
             StateManagerService.Relationships.Add(relationship);
 
             relationshipToInsert = null;
