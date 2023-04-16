@@ -24,53 +24,25 @@ namespace ObjectManagementSystemFrontend.Services
                 if (selectedObject != value)
                 {
                     selectedObject = value;
-                    OnSelectedObjectChanged(value);
+                    SelectedObjectChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(null, value));
                 }
             
             }
         }
+
+        // TODO: load objects and relationships from backend to StateManager
+        public ObservableCollection<Relationship> Relationships { get; set; } = new();
+        public ObservableCollection<GeneralObject> GeneralObjects { get; set; } = new();
 
         /// <summary>
         /// Notifies of a change of the <see cref="SelectedObject"/>
         /// </summary>
         public event EventHandler<GeneralObject> SelectedObjectChanged;
 
-        private void OnSelectedObjectChanged(GeneralObject generalObject)
-        {
-            SelectedObjectChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(null, generalObject));
-        }
-
-        // TODO: load objects and relationships from backend to StateManager
-        private ObservableCollection<Relationship> relationships = new();
-        public ObservableCollection<Relationship> Relationships
-        {
-            get => relationships;
-            set
-            {
-                if (relationships != value)
-                {
-                    relationships = value;
-                }
-            }
-        }
-
         /// <summary>
         /// Notifies on a change in the collection <see cref="Relationships"/>
         /// </summary>
         public event EventHandler<ObservableCollection<Relationship>> RelationshipsChanged;
-
-        private ObservableCollection<GeneralObject> generalObjects = new();
-        public ObservableCollection<GeneralObject> GeneralObjects
-        {
-            get => generalObjects;
-            set
-            {
-                if (GeneralObjects != value)
-                {
-                    generalObjects = value;
-                }
-            }
-        }
 
         /// <summary>
         /// Notifies on a change in the collection <see cref="GeneralObjects"/>
@@ -82,9 +54,8 @@ namespace ObjectManagementSystemFrontend.Services
         /// </summary>
         public event EventHandler<GeneralObject> ObjectItemPropertyChanged;
 
-
         /// <summary>
-        /// Notifies on a change in a property of any item in the collection <see cref="GeneralObjects"/> or <see cref="Relationships"/>
+        /// Notifies on a change in a property of any item in the collection <see cref="Relationships"/>
         /// </summary>
         public event EventHandler<Relationship> RelationshipItemPropertyChanged;
 
@@ -120,8 +91,8 @@ namespace ObjectManagementSystemFrontend.Services
             this.dataProviderService = dataProviderService;
             this.dataPersistenceService = dataPersistenceService;
 
-            generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
-            relationships.CollectionChanged += OnRelationshipsCollectionChanged;
+            GeneralObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
+            Relationships.CollectionChanged += OnRelationshipsCollectionChanged;
         }
 
         public async Task Initialize()
@@ -130,12 +101,12 @@ namespace ObjectManagementSystemFrontend.Services
 
             foreach(var generalObject in initialDataLoad.Item1)
             {
-                generalObjects.Add(generalObject);
+                GeneralObjects.Add(generalObject);
             }
 
             foreach(var relationship in initialDataLoad.Item2)
             {
-                relationships.Add(relationship);
+                Relationships.Add(relationship);
             }
 
             isInitialized = true;
@@ -143,7 +114,7 @@ namespace ObjectManagementSystemFrontend.Services
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
+            GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", GeneralObjects));
 
             if (isInitialized)
             {
@@ -161,7 +132,7 @@ namespace ObjectManagementSystemFrontend.Services
 
         private void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
+            RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", Relationships));
 
             if (isInitialized)
             {
@@ -179,8 +150,8 @@ namespace ObjectManagementSystemFrontend.Services
 
         public void Dispose()
         {
-            generalObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
-            relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
+            GeneralObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
+            Relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
         }
     }
 }
