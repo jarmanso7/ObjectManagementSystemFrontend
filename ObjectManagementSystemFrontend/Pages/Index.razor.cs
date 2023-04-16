@@ -25,11 +25,6 @@ namespace ObjectManagementSystemFrontend.Pages
 		private async Task PopulateData()
 		{
 			await StateManagerService.Initialize();
-
-			//TODO deprecate these Reload() method calls and replace by events of StateManager
-			await objectListComponent.Reload();
-			await relationshipListComponent.Reload();
-			graphComponent.Reload();
 		}
 	}
 }

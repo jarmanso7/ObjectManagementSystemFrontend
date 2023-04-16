@@ -16,11 +16,6 @@ namespace ObjectManagementSystemFrontend.Components
 		private GeneralObject generalObjectToInsert;
 		private GeneralObject generalObjectToUpdate;
 
-		public async Task Reload()
-		{
-			await dataGrid.Reload();
-		}
-
         void Reset()
         {
             generalObjectToInsert = null;
@@ -33,6 +28,12 @@ namespace ObjectManagementSystemFrontend.Components
 
             StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
 			StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
+			StateManagerService.Reload += OnReloadRequest;
+        }
+
+        private async void OnReloadRequest(object? sender, EventArgs e)
+        {
+            await dataGrid.Reload();
         }
 
         private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)

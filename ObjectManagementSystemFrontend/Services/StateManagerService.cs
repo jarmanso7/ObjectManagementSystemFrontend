@@ -35,6 +35,10 @@ namespace ObjectManagementSystemFrontend.Services
         public ObservableCollection<GeneralObject> GeneralObjects { get; set; } = new();
 
         /// <summary>
+        /// Requests a general reload of the UI components
+        /// </summary>
+        public event EventHandler Reload;
+        /// <summary>
         /// Notifies of a change of the <see cref="SelectedObject"/>
         /// </summary>
         public event EventHandler<GeneralObject> SelectedObjectChanged;
@@ -85,6 +89,12 @@ namespace ObjectManagementSystemFrontend.Services
             }
         }
 
+        public void Dispose()
+        {
+            GeneralObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
+            Relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
+        }
+
         public StateManagerService(DataProviderService dataProviderService,
                                     DataPersistenceService dataPersistenceService)
         {
@@ -110,6 +120,8 @@ namespace ObjectManagementSystemFrontend.Services
             }
 
             isInitialized = true;
+
+            Reload.Invoke(this, new EventArgs());
         }
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -146,12 +158,6 @@ namespace ObjectManagementSystemFrontend.Services
                         break;
                 }
             };
-        }
-
-        public void Dispose()
-        {
-            GeneralObjects.CollectionChanged -= OnGeneralObjectsCollectionChanged;
-            Relationships.CollectionChanged -= OnRelationshipsCollectionChanged;
         }
     }
 }

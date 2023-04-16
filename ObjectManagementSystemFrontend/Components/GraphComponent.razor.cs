@@ -27,6 +27,13 @@ namespace ObjectManagementSystemFrontend.Components
 
             StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
             StateManagerService.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
+
+            StateManagerService.Reload += OnReloadRequest;
+        }
+
+        private void OnReloadRequest(object? sender, EventArgs e)
+        {
+            LoadData();
         }
 
         private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
@@ -46,11 +53,6 @@ namespace ObjectManagementSystemFrontend.Components
         private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
         {
 			Console.WriteLine("GraphComponent: ChangeGeneralObjectsCollection");
-        }
-
-        public void Reload()
-        {
-			LoadData();
         }
 
         public void LoadData()

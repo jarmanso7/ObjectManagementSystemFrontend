@@ -34,6 +34,12 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
             StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
             StateManagerService.RelationshipsChanged += OnRelationshipsChanged;
+            StateManagerService.Reload += OnReloadRequest;
+        }
+
+        private async void OnReloadRequest(object? sender, EventArgs e)
+        {
+            await dataGrid.Reload();
         }
 
         private void OnRelationshipsChanged(object src, StateChangedEventArgs<ObservableCollection<Relationship>> args)
@@ -56,11 +62,6 @@ namespace ObjectManagementSystemFrontend.Components
             selectedObject = e.Item;
 
             Refresh();
-        }
-
-        public async Task Reload()
-        {
-            await dataGrid.Reload();
         }
 
         void Reset()
