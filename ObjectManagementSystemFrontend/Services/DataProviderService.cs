@@ -22,7 +22,11 @@ namespace ObjectManagementSystemFrontend.Services
             this.configuration = configuration;
         }
 
-        public async Task<(List<GeneralObject>,List<Relationship>)> FetchData()
+        /// <summary>
+        /// Reads the data from the source.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<(List<GeneralObject>,List<Relationship>)> Read()
         {
             var fetchedObjects = await httpClient.GetFromJsonAsync<GeneralObject[]>(getApiEndpoint(requestObjectsEndpoint));
             var fetchedRelationships = await httpClient.GetFromJsonAsync<RelationshipDTO[]>(getApiEndpoint(requestRelationshipsEndpoint));

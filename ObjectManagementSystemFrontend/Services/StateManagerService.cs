@@ -126,7 +126,7 @@ namespace ObjectManagementSystemFrontend.Services
 
         public async Task Initialize()
         {
-            var initialDataLoad = await dataProviderService.FetchData();
+            var initialDataLoad = await dataProviderService.Read();
 
             foreach(var generalObject in initialDataLoad.Item1)
             {
