@@ -9,12 +9,11 @@ namespace ObjectManagementSystemFrontend.Services
     /// </summary>
     public class StateManagerService : IDisposable
     {
-        /// <summary>
-        /// Indicates if initial load of data has been performed.
-        /// </summary>
-        private bool dataIsLoadedFromBackend = false;
+        // Indicates whether the application data has been initialized or not.
+        private bool isInitialized = false;
 
-        private readonly DataProviderService backendDataSerializerService;
+        private readonly DataProviderService dataProviderService;
+        private readonly DataPersistenceService dataPersistenceService;
 
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
@@ -42,7 +41,6 @@ namespace ObjectManagementSystemFrontend.Services
         }
 
         // TODO: load objects and relationships from backend to StateManager
-
         private ObservableCollection<Relationship> relationships = new();
         public ObservableCollection<Relationship> Relationships
         {
@@ -53,6 +51,11 @@ namespace ObjectManagementSystemFrontend.Services
                 {
                     relationships = value;
                     RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
+
+                    if (isInitialized)
+                    {
+                        dataPersistenceService.OnRelationshipsChanged();
+                    }
                 }
             }
         }
@@ -72,6 +75,11 @@ namespace ObjectManagementSystemFrontend.Services
                 {
                     generalObjects = value;
                     GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
+
+                    if (isInitialized)
+                    {
+                        dataPersistenceService.OnGeneralObjectsChanged();
+                    }
                 }
             }
         }
@@ -97,9 +105,12 @@ namespace ObjectManagementSystemFrontend.Services
         /// </summary>
         public void InvokeObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
-            //TODO: trigger database changes using e.
-
             ObjectItemPropertyChanged?.Invoke(this, e);
+
+            if (isInitialized)
+            {
+                dataPersistenceService.OnObjectItemPropertyChanged();
+            }
         }
 
         /// <summary>
@@ -107,14 +118,19 @@ namespace ObjectManagementSystemFrontend.Services
         /// </summary>
         public void InvokeRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
-            //TODO: trigger database changes using e.
-
             RelationshipItemPropertyChanged?.Invoke(this, e);
+
+            if (isInitialized)
+            {
+                dataPersistenceService.OnObjectItemPropertyChanged();
+            }
         }
 
-        public StateManagerService(DataProviderService backendDataSerializerService)
+        public StateManagerService(DataProviderService dataProviderService,
+                                    DataPersistenceService dataPersistenceService)
         {
-            this.backendDataSerializerService = backendDataSerializerService;
+            this.dataProviderService = dataProviderService;
+            this.dataPersistenceService = dataPersistenceService;
 
             generalObjects.CollectionChanged += OnGeneralObjectsCollectionChanged;
             relationships.CollectionChanged += OnRelationshipsCollectionChanged;
@@ -122,7 +138,7 @@ namespace ObjectManagementSystemFrontend.Services
 
         public async Task Initialize()
         {
-            var initialDataLoad = await backendDataSerializerService.FetchData();
+            var initialDataLoad = await dataProviderService.FetchData();
 
             foreach(var generalObject in initialDataLoad.Item1)
             {
@@ -134,20 +150,27 @@ namespace ObjectManagementSystemFrontend.Services
                 relationships.Add(relationship);
             }
 
-            dataIsLoadedFromBackend = true;
+            isInitialized = true;
         }
 
         private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            //TODO: trigger database changes using e.OldItems, e.NewItems and e.Action
             GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", generalObjects));
+
+            if (isInitialized)
+            {
+                dataPersistenceService.OnGeneralObjectsChanged();
+            };
         }
 
         private void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            //TODO: trigger database changes using e.OldItems, e.NewItems and e.Action
-
             RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", relationships));
+
+            if (isInitialized)
+            {
+                dataPersistenceService.OnRelationshipsChanged();
+            };
         }
 
         public void Dispose()

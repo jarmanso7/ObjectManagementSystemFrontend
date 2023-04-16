@@ -21,6 +21,6 @@ builder.Configuration.AddJsonStream(stream);
 builder.Services.AddScoped(sp => httpClient);
 builder.Services.AddScoped<DataProviderService>();
 builder.Services.AddScoped<StateManagerService>();
-builder.Services.AddScoped<PersistenceService>();
+builder.Services.AddScoped<DataPersistenceService>();
 
 await builder.Build().RunAsync();

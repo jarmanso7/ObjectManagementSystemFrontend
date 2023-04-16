@@ -1,14 +1,13 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
-using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
-	public partial class GraphComponent
+    public partial class GraphComponent
     {
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();

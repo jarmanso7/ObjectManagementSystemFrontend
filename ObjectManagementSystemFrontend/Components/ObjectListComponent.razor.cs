@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
-using ObjectManagementSystemFrontend.Models;
+﻿using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.ObjectiveC;
 
 namespace ObjectManagementSystemFrontend.Components
 {
