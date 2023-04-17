@@ -7,13 +7,3 @@
     height: 600px;
     width: 600px;
 }
-
-::deep .node[data-node-id=" 5813b224-99e0-4d6e-a790-476ab12ba09b"] > div {
-    color: red;
-    background-color: green;
-}
-
-::deep .selected {
-    color: #1151f3;
-    background-color: #e7e7fb;
-}
