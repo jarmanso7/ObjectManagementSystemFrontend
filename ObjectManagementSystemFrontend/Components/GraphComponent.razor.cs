@@ -1,6 +1,7 @@
 ﻿using Blazor.Diagrams.Core;
 using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
+using Microsoft.JSInterop;
 using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using ObjectManagementSystemFrontend.Services.Events;
@@ -17,7 +18,8 @@ namespace ObjectManagementSystemFrontend.Components
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();
 
-        private Diagram Diagram { get; set; }
+        private Diagram Diagram;
+
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -32,6 +34,12 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
 
             StateManagerService.Reload += OnReloadRequest;
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            // Import the custom JavaScript script to handle visibility of nodes via JSInterop
+            var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/GraphComponent.razor.js");
         }
 
 		protected override void OnInitialized()
@@ -59,10 +67,28 @@ namespace ObjectManagementSystemFrontend.Components
 			Diagram.SetZoom(0.5);
         }
 
-        private void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
+        private string GraphTitle()
+        {
+            var selectedObjectName = StateManagerService.SelectedObject?.Name;
+
+            if (string.IsNullOrEmpty(selectedObjectName))
+            {
+                return "Graph";
+            }
+
+            return $"{selectedObjectName}'s Graph";
+        }
+
+        /// <summary>
+        /// Handles visualization of each element in the graph according to the selected object by the user.
+        /// </summary>
+        /// <param name="src">The source.</param>
+        /// <param name="args">The <see cref="StateChangedEventArgs{GeneralObject}"/> instance containing the event data.</param>
+        private async void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
         {
             if (args?.Item?.Name == null)
             {
+                await JSRuntime.InvokeVoidAsync("showAllNodes");
                 return;
             }
 
@@ -70,10 +96,34 @@ namespace ObjectManagementSystemFrontend.Components
 
             if (selectedNode == null)
             {
+                await JSRuntime.InvokeVoidAsync("showAllNodes");
                 return;
             }
 
             selectedNode.Title = args.Item.Name;
+
+            await ShowOnlyRelatedObjects(args.Item.Id);
+        }
+
+        /// <summary>
+        /// Shows the objects and relationships associated to the selected object
+        /// </summary>
+        private async Task ShowOnlyRelatedObjects(string selectedObjectId)
+        {
+            await JSRuntime.InvokeVoidAsync("hideAllNodes");
+            await JSRuntime.InvokeVoidAsync("hideAllLinks");
+
+            // Get the ids of all the objects related to the selectedObject
+            var objectRelationships = StateManagerService.Relationships.Where(r => r.From.Id == selectedObjectId || r.To.Id == selectedObjectId);
+      
+            var selectedObjectRelationshipsIds = objectRelationships.Select(r => r.Id);
+            var relatedObjectsIds = objectRelationships.Select(r => r.From.Id).Concat(objectRelationships.Select(r => r.To.Id)).Distinct();
+
+            //show only related links
+            await JSRuntime.InvokeVoidAsync("showLinks", new object[] { selectedObjectRelationshipsIds.ToArray() });
+
+            //show only related nodes
+            await JSRuntime.InvokeVoidAsync("showNodes", new object[] { relatedObjectsIds.ToArray() });
         }
 
         private void OnReloadRequest(object? sender, EventArgs e)
@@ -93,9 +143,8 @@ namespace ObjectManagementSystemFrontend.Components
 
             Diagram.Refresh();
         }
-        private void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
+        private async void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
-            
         }
 
         private void OnRelationshipsChanged(object? sender, StateChangedEventArgs<Relationship> e)
@@ -104,7 +153,7 @@ namespace ObjectManagementSystemFrontend.Components
             {
                 case StateChangeActionEnum.Add:
 
-                    Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == e.Item.From.Id), Diagram.Nodes.First(n => n.Id == e.Item.To.Id))
+                    Diagram.Links.Add(new LinkModel(e.Item.Id,Diagram.Nodes.First(n => n.Id == e.Item.From.Id), Diagram.Nodes.First(n => n.Id == e.Item.To.Id))
                     {
                         SourceMarker = LinkMarker.Arrow,
                         TargetMarker = LinkMarker.Arrow
