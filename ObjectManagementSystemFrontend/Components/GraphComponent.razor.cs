@@ -138,8 +138,24 @@ namespace ObjectManagementSystemFrontend.Components
 
             Diagram.Refresh();
         }
+        /// <summary>
+        /// Update Link label if the relationship type has changed
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="StateChangedEventArgs{Relationship}"/> instance containing the event data.</param>
         private async void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
+            var link = Diagram.Links.FirstOrDefault(l => l.Id == e.Item.Id);
+
+            var associatedVerticesHaveChanged = link?.SourceNode.Id != e.Item.From.Id || link?.TargetNode?.Id != e.Item.From.Id;
+
+            if (associatedVerticesHaveChanged)
+            {
+                Diagram.Links.Remove(link);
+
+                Diagram.Links.Add(CreateLink(e.Item.Id, e.Item.From.Id, e.Item.To.Id, e.Item.Type));
+            }
+
+            Diagram.Refresh();
         }
 
         private async void OnRelationshipsChanged(object? sender, StateChangedEventArgs<Relationship> e)
@@ -148,16 +164,21 @@ namespace ObjectManagementSystemFrontend.Components
             {
                 case StateChangeActionEnum.Add:
 
-                    Diagram.Links.Add(new LinkModel(e.Item.Id,Diagram.Nodes.First(n => n.Id == e.Item.From.Id), Diagram.Nodes.First(n => n.Id == e.Item.To.Id))
-                    {
-                        SourceMarker = LinkMarker.Arrow,
-                        TargetMarker = LinkMarker.Arrow
-                    });
+                    var newLink = CreateLink(e.Item.Id, e.Item.From.Id, e.Item.To.Id, e.Item.Type);
+
+                    Diagram.Links.Add(newLink);
 
                     break;
 
                 case StateChangeActionEnum.Remove:
-                    Diagram.Links.Remove(Diagram.Links.First(n => n.Id == e.Item.Id));
+
+                    var oldLink = Diagram.Links.FirstOrDefault(n => n.Id == e.Item.Id);
+
+                    if(oldLink != null)
+                    {
+                        Diagram.Links.Remove(oldLink);
+                    }
+
                     break;
             }
 
@@ -192,6 +213,20 @@ namespace ObjectManagementSystemFrontend.Components
         private Point GetRandomPointWithinGraphCanvas()
         {
             return new Point(random.Next(100, 1100), random.Next(100, 1100));
+        }
+
+        /// <summary>
+        /// Creates a new Link Model with the appropriate characteristics.
+        /// </summary>
+        /// <returns></returns>
+        private LinkModel CreateLink(string id, string fromId, string toId, string type)
+        {
+            var link = new LinkModel(id, Diagram.Nodes.First(n => n.Id == fromId), Diagram.Nodes.First(n => n.Id == toId));
+
+            link.Labels.Add(new LinkLabelModel(link, type));
+            link.TargetMarker = LinkMarker.Arrow;
+
+            return link;
         }
 
         public void Dispose()

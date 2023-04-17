@@ -3,8 +3,6 @@ using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
 using ObjectManagementSystemFrontend.Services.Events;
 using Radzen.Blazor;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 
 namespace ObjectManagementSystemFrontend.Components
 {

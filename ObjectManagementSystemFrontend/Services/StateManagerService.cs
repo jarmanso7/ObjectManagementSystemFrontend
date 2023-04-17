@@ -183,10 +183,10 @@ namespace ObjectManagementSystemFrontend.Services
                     var removeObject = e.OldItems?.Cast<GeneralObject>().FirstOrDefault();
 
                     GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(removeObject, stateChangeAction));
+                    RemoveAll(Relationships, (Relationship r) => r.From.Id == removeObject.Id || r.To.Id == removeObject.Id);
 
                     if (dataIsInitialized)
                     {
-                        //TODO: handle hanging relationships when removing an object
                         await dataPersistenceService.DeleteGeneralObject(removeObject);
                     }
 
@@ -263,6 +263,24 @@ namespace ObjectManagementSystemFrontend.Services
                     }
 
                     break;
+            }
+        }
+
+        /// <summary>
+        /// Removes all items matching a specific condition from the ObservableCollection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="collection">The collection.</param>
+        /// <param name="condition">The condition.</param>
+        private void RemoveAll<T>(ObservableCollection<T> collection,
+                                                       Func<T, bool> condition)
+        {
+            for (int i = collection.Count - 1; i >= 0; i--)
+            {
+                if (condition(collection[i]))
+                {
+                    collection.RemoveAt(i);
+                }
             }
         }
     }
