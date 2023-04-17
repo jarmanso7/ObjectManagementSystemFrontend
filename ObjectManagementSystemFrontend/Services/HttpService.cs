@@ -10,8 +10,8 @@ namespace ObjectManagementSystemFrontend.Services
     {
         private const string ApiRootUriConfigurationKey = "ApiRootUri";
 
-        private const string requestObjectsEndpoint = "objects";
-        private const string requestRelationshipsEndpoint = "relationships";
+        private const string objectsEndpoint = "objects";
+        private const string relationshipsEndpoint = "relationships";
 
         private readonly HttpClient httpClient;
         private readonly IConfiguration configuration;
@@ -24,12 +24,12 @@ namespace ObjectManagementSystemFrontend.Services
         }
 
         /// <summary>
-        /// Gets the objects via HTTP request.
+        /// Gets the Objects via HTTP request.
         /// </summary>
         /// <returns></returns>
         public async Task<GeneralObjectDTO[]> GeneralObjectsHttpRequest()
         {
-            return await httpClient.GetFromJsonAsync<GeneralObjectDTO[]>(GetApiEndpoint(requestObjectsEndpoint));
+            return await httpClient.GetFromJsonAsync<GeneralObjectDTO[]>(GetApiEndpoint(objectsEndpoint));
         }
 
         /// <summary>
@@ -38,7 +38,65 @@ namespace ObjectManagementSystemFrontend.Services
         /// <returns></returns>
         public async Task<RelationshipDTO[]> RelationshipsHttpRequest()
         {
-            return await httpClient.GetFromJsonAsync<RelationshipDTO[]>(GetApiEndpoint(requestRelationshipsEndpoint));
+            return await httpClient.GetFromJsonAsync<RelationshipDTO[]>(GetApiEndpoint(relationshipsEndpoint));
+        }
+
+        /// <summary>
+        /// Sends out a post request to create a new general object.
+        /// </summary>
+        /// <param name="generalObjectDTO">The general object dto.</param>
+        public async Task CreateGeneralObjectRequest(GeneralObjectDTO generalObjectDTO)
+        {
+            await httpClient.PostAsJsonAsync(GetApiEndpoint(objectsEndpoint), generalObjectDTO);
+        }
+
+        /// <summary>
+        /// Sends out a post request to create a new relationship.
+        /// </summary>
+        /// <param name="RelationshipDTO">The relationship dto.</param>
+        public async Task CreateRelationshiptRequest(RelationshipDTO relationshipDTO)
+        {
+            await httpClient.PostAsJsonAsync(GetApiEndpoint(relationshipsEndpoint), relationshipDTO);
+        }
+
+        /// <summary>
+        /// Sends out a delete request to delete a general object.
+        /// </summary>
+        /// <param name="generalObjectDTO">The general object dto.</param>
+        public async Task DeleteGeneralObjectRequest(GeneralObjectDTO generalObjectDTO)
+        {
+            var deleteUri = GetApiEndpoint(objectsEndpoint) + generalObjectDTO.Id;
+
+            await httpClient.DeleteFromJsonAsync<string>(deleteUri);
+        }
+
+        /// <summary>
+        /// Sends out a delete request to delete a new relationship.
+        /// </summary>
+        /// <param name="RelationshipDTO">The relationship dto.</param>
+        public async Task DeleteRelationshiptRequest(RelationshipDTO relationshipDTO)
+        {
+            var deleteUri = GetApiEndpoint(relationshipsEndpoint) + relationshipDTO.Id;
+
+            await httpClient.DeleteFromJsonAsync<string>(deleteUri);
+        }
+
+        /// <summary>
+        /// Sends out a put request to update a general object.
+        /// </summary>
+        /// <param name="generalObjectDTO">The general object dto.</param>
+        public async Task UpdateGeneralObjectRequest(GeneralObjectDTO generalObjectDTO)
+        {
+            await httpClient.PutAsJsonAsync(GetApiEndpoint(objectsEndpoint), generalObjectDTO);
+        }
+
+        /// <summary>
+        /// Sends out a put request to update a new relationship.
+        /// </summary>
+        /// <param name="RelationshipDTO">The relationship dto.</param>
+        public async Task UpdateRelationshiptRequest(RelationshipDTO relationshipDTO)
+        {
+            await httpClient.PutAsJsonAsync(GetApiEndpoint(relationshipsEndpoint), relationshipDTO);
         }
 
         private string GetApiEndpoint(string relativePath)

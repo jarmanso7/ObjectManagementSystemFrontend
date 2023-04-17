@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using ObjectManagementSystemFrontend.Models;
 
 namespace ObjectManagementSystemFrontend.Services
 {
@@ -7,41 +7,83 @@ namespace ObjectManagementSystemFrontend.Services
     /// </summary>
     public class DataPersistenceService
     {
-        private readonly HttpClient httpClient;
+        private readonly HttpService httpService;
+        private readonly MapperService mapperService;
 
-        public DataPersistenceService(HttpClient httpClient)
+        public DataPersistenceService(
+            HttpService httpService,
+            MapperService mapperService)
         {
-            this.httpClient = httpClient;
+            this.httpService = httpService;
+            this.mapperService = mapperService;
         }
 
         /// <summary>
-        /// Creates the specified item.
+        /// Creates the general object.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        public void Create<T>(T item)
+        /// <param name="generalObject">The general object.</param>
+        public async Task CreateGeneralObject(GeneralObject generalObject)
         {
-            Console.WriteLine($"Create: {JsonSerializer.Serialize(item)}");
+            var generalObjectDTO = mapperService.Map(generalObject);
 
-        }
-        /// <summary>
-        /// Deletes the specified item.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        public void Delete<T>(T item)
-        {
-            Console.WriteLine($"Delete: {JsonSerializer.Serialize(item)}");
+            await this.httpService.CreateGeneralObjectRequest(generalObjectDTO);
         }
 
         /// <summary>
-        /// Updates the specified item.
+        /// Creates the relationship.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item">The item.</param>
-        public void Update<T>(T item)
+        /// <param name="relationship">The relationship.</param>
+        public async Task CreateRelationship(Relationship relationship)
         {
-            Console.WriteLine($"Update: {JsonSerializer.Serialize(item)}");
+            var relationshipDTO = mapperService.Map(relationship);
+
+            await this.httpService.CreateRelationshiptRequest(relationshipDTO);
+        }
+
+        /// <summary>
+        /// Deletes the general object.
+        /// </summary>
+        /// <param name="generalObject">The general object.</param>
+        /// <returns></returns>
+        public async Task DeleteGeneralObject(GeneralObject generalObject)
+        {
+            var generalObjectDTO = mapperService.Map(generalObject);
+
+            await this.httpService.DeleteGeneralObjectRequest(generalObjectDTO);
+        }
+
+        /// <summary>
+        /// Deletes the relationship.
+        /// </summary>
+        /// <param name="relationship">The relationship.</param>
+        public async Task DeleteRelationship(Relationship relationship)
+        {
+            var relationshipDTO = mapperService.Map(relationship);
+
+            await this.httpService.DeleteRelationshiptRequest(relationshipDTO);
+        }
+
+        /// <summary>
+        /// Updates the general object.
+        /// </summary>
+        /// <param name="generalObject">The general object.</param>
+        /// <returns></returns>
+        public async Task UpdateGeneralObject(GeneralObject generalObject)
+        {
+            var generalObjectDTO = mapperService.Map(generalObject);
+
+            await this.httpService.UpdateGeneralObjectRequest(generalObjectDTO);
+        }
+
+        /// <summary>
+        /// Updates the relationship.
+        /// </summary>
+        /// <param name="relationship">The relationship.</param>
+        public async Task UpdateRelationship(Relationship relationship)
+        {
+            var relationshipDTO = mapperService.Map(relationship);
+
+            await this.httpService.UpdateRelationshiptRequest(relationshipDTO);
         }
     }
 }

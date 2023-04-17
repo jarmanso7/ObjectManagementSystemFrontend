@@ -10,7 +10,6 @@ namespace ObjectManagementSystemFrontend.Services
     /// </summary>
     public class MapperService
     {
-
         /// <summary>
         ///     Maps a collection of RelationshipDTO to Relationship. The model <see cref="Relationship" /> contains some properties of the other relevant type <see cref="GeneralObject" />.
         /// </summary>
@@ -67,9 +66,41 @@ namespace ObjectManagementSystemFrontend.Services
         }
 
         /// <summary>
-        /// Maps <see cref="Relationship" />, which contains some properties of the other relevant type <see cref="GeneralObject" />, to <see cref="RelationshipDTO" />.
+        /// Maps the specified general object to a general object DTO.
+        /// </summary>
+        /// <param name="generalObject">The general object.</param>
+        /// <returns></returns>
+        public GeneralObjectDTO Map(GeneralObject generalObject)
+        {
+            return new GeneralObjectDTO
+            {
+                Id = generalObject.Id,
+                Type = generalObject.Type,
+                Name = generalObject.Name,
+                Description = generalObject.Description
+            };
+        }
+
+        /// <summary>
+        /// Maps a <see cref="RelationshipDTO" /> to a <see cref="Relationship" />.
         /// </summary>
         /// <param name="relationship">The relationship.</param>
+        /// <returns></returns>
+        public RelationshipDTO Map(Relationship relationship)
+        {
+            return new RelationshipDTO
+            {
+                Id = relationship.Id,
+                Type = relationship.Type,
+                FromId = relationship.From.Id.ToString(),
+                ToId = relationship.To.Id.ToString()
+            };
+        }
+
+        /// <summary>
+        /// Maps a <see cref="RelationshipDTO" /> to a <see cref="Relationship" /> which contains some properties of the other relevant type <see cref="GeneralObject" />.
+        /// </summary>
+        /// <param name="relationshipDTO">The relationship dto.</param>
         /// <param name="generalObjectDTO">The general object dto.</param>
         /// <returns></returns>
         private Relationship Map(RelationshipDTO relationshipDTO, GeneralObjectDTO from, GeneralObjectDTO to)

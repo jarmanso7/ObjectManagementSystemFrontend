@@ -33,6 +33,9 @@ namespace ObjectManagementSystemFrontend.Services
             Relationships.CollectionChanged += OnRelationshipsCollectionChanged;
         }
 
+        /// <summary>
+        /// Keeps track in-memory of the active object selected in the search datagrid and used to show the associated relationships.
+        /// </summary>
         private GeneralObject selectedObject = new GeneralObject { Description = "", Type = "", Id = "", Name = "" };
         public GeneralObject SelectedObject
         {
@@ -48,7 +51,20 @@ namespace ObjectManagementSystemFrontend.Services
             }
         }
 
+        /// <summary>
+        ///   The collection of existing relationships between objects.
+        /// </summary>
+        /// <value>
+        /// The relationships.
+        /// </value>
         public ObservableCollection<Relationship> Relationships { get; set; } = new();
+
+        /// <summary>
+        ///  The collection of general objects existing in the Object Management System.
+        /// </summary>
+        /// <value>
+        /// The general objects.
+        /// </value>
         public ObservableCollection<GeneralObject> GeneralObjects { get; set; } = new();
 
         /// <summary>
@@ -83,26 +99,26 @@ namespace ObjectManagementSystemFrontend.Services
         /// <summary>
         /// Enables invocation of ObjectItemPropertyChanged from any component that uses <see cref="StateManager"/>
         /// </summary>
-        public void InvokeObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
+        public async Task InvokeObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
             ObjectItemPropertyChanged?.Invoke(this, e);
 
             if (dataIsInitialized)
             {
-                dataPersistenceService.Update(e.Item);
+                await dataPersistenceService.UpdateGeneralObject(e.Item);
             }
         }
 
         /// <summary>
         /// Enables invocation of RelationshipItemPropertyChanged from any component that uses <see cref="StateManager"/>
         /// </summary>
-        public void InvokeRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
+        public async Task InvokeRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
             RelationshipItemPropertyChanged?.Invoke(this, e);
 
             if (dataIsInitialized)
             {
-                dataPersistenceService.Update(e.Item);
+                await dataPersistenceService.UpdateRelationship(e.Item);
             }
         }
 
@@ -140,7 +156,7 @@ namespace ObjectManagementSystemFrontend.Services
             Reload.Invoke(this, new EventArgs());
         }
 
-        private void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private async void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", GeneralObjects));
 
@@ -149,16 +165,19 @@ namespace ObjectManagementSystemFrontend.Services
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        dataPersistenceService.Create(e.NewItems?.Cast<GeneralObject>().FirstOrDefault());
+                        await dataPersistenceService.CreateGeneralObject(e.NewItems?.Cast<GeneralObject>().FirstOrDefault());
                         break;
+
                     case NotifyCollectionChangedAction.Remove:
-                        dataPersistenceService.Delete(e.OldItems?.Cast<GeneralObject>().FirstOrDefault());
+                        
+                        //TODO: handle hanging relationships when removing an object
+                        await dataPersistenceService.DeleteGeneralObject(e.OldItems?.Cast<GeneralObject>().FirstOrDefault());
                         break;
                 }
             };
         }
 
-        private void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private async void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", Relationships));
 
@@ -167,10 +186,10 @@ namespace ObjectManagementSystemFrontend.Services
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        dataPersistenceService.Create(e.NewItems?.Cast<Relationship>().FirstOrDefault());
+                        await dataPersistenceService.CreateRelationship(e.NewItems?.Cast<Relationship>().FirstOrDefault());
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        dataPersistenceService.Delete(e.OldItems?.Cast<Relationship>().FirstOrDefault());
+                        await dataPersistenceService.DeleteRelationship(e.OldItems?.Cast<Relationship>().FirstOrDefault());
                         break;
                 }
             };

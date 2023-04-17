@@ -76,7 +76,7 @@ namespace ObjectManagementSystemFrontend.Components
             await dataGrid.EditRow(relationship);
         }
 
-        void OnUpdateRow(Relationship relationship)
+        async Task OnUpdateRow(Relationship relationship)
         {
             if (relationship == relationshipToInsert)
             {
@@ -85,7 +85,7 @@ namespace ObjectManagementSystemFrontend.Components
 
             relationshipToUpdate = null;
 
-            StateManagerService.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
+            await StateManagerService.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
         }
 
         async Task SaveRow(Relationship relationship)

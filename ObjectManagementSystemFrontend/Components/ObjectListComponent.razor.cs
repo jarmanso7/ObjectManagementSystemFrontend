@@ -55,7 +55,7 @@ namespace ObjectManagementSystemFrontend.Components
 			await dataGrid.EditRow(generalObject);
 		}
 
-        void OnUpdateRow(GeneralObject generalObject)
+        async Task OnUpdateRow(GeneralObject generalObject)
         {
             if (generalObject == generalObjectToInsert)
             {
@@ -64,8 +64,7 @@ namespace ObjectManagementSystemFrontend.Components
 
             generalObjectToUpdate = null;
 
-			//Trigger Save to DB and memory
-			StateManagerService.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
+			await StateManagerService.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
         }
 
 		void OnSelectRow(GeneralObject selectedObject)
