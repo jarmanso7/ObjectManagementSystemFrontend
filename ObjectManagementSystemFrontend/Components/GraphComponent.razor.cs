@@ -3,20 +3,21 @@ using Blazor.Diagrams.Core.Geometry;
 using Blazor.Diagrams.Core.Models;
 using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
-using System.Collections.ObjectModel;
+using ObjectManagementSystemFrontend.Services.Events;
 
 namespace ObjectManagementSystemFrontend.Components
 {
+    /// <summary>
+    /// Displays a visual representation of Objects and Relationships as a graph of nodes connected by links.
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
+    /// <seealso cref="System.IDisposable" />
     public partial class GraphComponent : IDisposable
     {
         // Used to position nodes randomly accross the canvas.
         private Random random = new Random();
 
         private Diagram Diagram { get; set; }
-
-		private List<GeneralObject> objects;
-
-		private List<Relationship> relationships;
 
 		protected override async Task OnInitializedAsync()
 		{
@@ -33,26 +34,52 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.Reload += OnReloadRequest;
         }
 
+		protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            var options = new DiagramOptions
+            {
+                DeleteKey = null,
+                DefaultNodeComponent = null,
+                AllowMultiSelection = false,
+				AllowPanning = false,
+                Links = new DiagramLinkOptions
+                {
+                    // Options related to links
+                },
+                Zoom = new DiagramZoomOptions
+                {
+					Enabled = false,
+                },
+            };
+
+			Diagram = new Diagram(options);
+
+			Diagram.SetZoom(0.5);
+        }
+
         private void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
         {
-            if(args?.Item?.Name == null)
+            if (args?.Item?.Name == null)
             {
                 return;
             }
 
             var selectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == args.Item.Id);
-            
+
             if (selectedNode == null)
             {
                 return;
             }
-            
+
             selectedNode.Title = args.Item.Name;
         }
 
         private void OnReloadRequest(object? sender, EventArgs e)
         {
-            LoadData();
+            Diagram.Refresh();
+            this.StateHasChanged();
         }
 
         /// <summary>
@@ -68,75 +95,55 @@ namespace ObjectManagementSystemFrontend.Components
         }
         private void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
-            Console.WriteLine($"GraphComponent: OnRelationshipItemPropertyChanged, relationship Type: {e.Item.Type}");
+            
         }
 
-        private void OnRelationshipsChanged(object? sender, StateChangedEventArgs<ObservableCollection<Relationship>> e)
+        private void OnRelationshipsChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
-            Console.WriteLine("GraphComponent: OnRelationshipsChanged");
-        }
-
-        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
-        {
-			Console.WriteLine("GraphComponent: ChangeGeneralObjectsCollection");
-        }
-
-        public void LoadData()
-		{
-			relationships = StateManagerService.Relationships.ToList();
-
-			objects = StateManagerService.GeneralObjects.ToList();
-
-			foreach (var genericObject in objects)
-			{
-				var node = new NodeModel(genericObject.Id, GetRandomPointWithinGraphCanvas(), RenderLayer.HTML, Shapes.Rectangle)
-				{
-					Title = genericObject.Name
-				};
-
-				Diagram.Nodes.Add(node);
-			}
-
-			foreach (var relationship in relationships)
-			{
-				Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == relationship.From.Id), Diagram.Nodes.First(n => n.Id == relationship.To.Id))
-				{
-					SourceMarker = LinkMarker.Arrow,
-					TargetMarker = LinkMarker.Arrow
-				});
-			}
-		}
-
-		protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-            var options = new DiagramOptions
+            switch (e.Action)
             {
-                DeleteKey = "Delete",
-                DefaultNodeComponent = null,
-                AllowMultiSelection = true,
-				AllowPanning = false,
-                Links = new DiagramLinkOptions
-                {
-                    // Options related to links
-                },
-                Zoom = new DiagramZoomOptions
-                {
-					Enabled = false,
-                }
-            };
+                case StateChangeActionEnum.Add:
 
-			Diagram = new Diagram(options);
+                    Diagram.Links.Add(new LinkModel(Diagram.Nodes.First(n => n.Id == e.Item.From.Id), Diagram.Nodes.First(n => n.Id == e.Item.To.Id))
+                    {
+                        SourceMarker = LinkMarker.Arrow,
+                        TargetMarker = LinkMarker.Arrow
+                    });
 
-			Diagram.SetZoom(0.5);
+                    break;
+
+                case StateChangeActionEnum.Remove:
+
+                    Diagram.Links.Remove(Diagram.Links.First(n => n.Id == e.Item.Id));
+                    break;
+            }
         }
 
-		/// <summary>
-		/// Provides a random point inside the canvas of 800x600 where the graph is rendered
-		/// </summary>
-		/// <returns></returns>
-		private Point GetRandomPointWithinGraphCanvas()
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
+        {
+            switch (e.Action)
+            {
+                case StateChangeActionEnum.Add:
+                    var node = new NodeModel(e.Item.Id, GetRandomPointWithinGraphCanvas(), RenderLayer.HTML, Shapes.Rectangle)
+                    {
+                        Title = e.Item.Name
+                    };
+
+                    Diagram.Nodes.Add(node);
+                    break;
+
+                case StateChangeActionEnum.Remove:
+                    Diagram.Nodes.Remove(Diagram.Nodes.FirstOrDefault(n => n.Id == e.Item.Id));
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Provides a random point inside the canvas of 800x600 where the graph is rendered
+        /// </summary>
+        /// <returns></returns>
+        private Point GetRandomPointWithinGraphCanvas()
         {
             return new Point(random.Next(100, 1100), random.Next(100, 1100));
         }

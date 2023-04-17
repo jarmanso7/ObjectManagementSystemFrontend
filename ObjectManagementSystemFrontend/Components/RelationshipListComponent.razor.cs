@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
+using ObjectManagementSystemFrontend.Services.Events;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -42,7 +44,7 @@ namespace ObjectManagementSystemFrontend.Components
             await dataGrid.Reload();
         }
 
-        private void OnRelationshipsChanged(object src, StateChangedEventArgs<ObservableCollection<Relationship>> args)
+        private void OnRelationshipsChanged(object src, StateChangedEventArgs<Relationship> args)
         {
             Refresh();
         }
@@ -52,7 +54,7 @@ namespace ObjectManagementSystemFrontend.Components
             Refresh();
         }
 
-        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
             Refresh();
         }
@@ -85,7 +87,9 @@ namespace ObjectManagementSystemFrontend.Components
 
             relationshipToUpdate = null;
 
-            await StateManagerService.InvokeRelationshipItemPropertyChanged(this, new StateChangedEventArgs<Relationship>("Relationships", relationship));
+            await StateManagerService.InvokeRelationshipItemPropertyChanged(
+                this,
+                new StateChangedEventArgs<Relationship>(relationship, StateChangeActionEnum.Update));
         }
 
         async Task SaveRow(Relationship relationship)

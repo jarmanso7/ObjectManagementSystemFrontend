@@ -1,4 +1,6 @@
-﻿namespace ObjectManagementSystemFrontend.Services
+﻿using ObjectManagementSystemFrontend.Services.Events;
+
+namespace ObjectManagementSystemFrontend.Services
 {
     public delegate void EventHandler<T>(object src, StateChangedEventArgs<T> args);
 
@@ -10,16 +12,12 @@
             get => item;
         }
 
-        private string? collectionName;
-        public string? CollectionName
-        {
-            get => collectionName;
-        }
+        public StateChangeActionEnum Action { get; private set; }
 
-        public StateChangedEventArgs(string? collectionName, T item)
+        public StateChangedEventArgs(T item, StateChangeActionEnum action)
         {
-            this.collectionName = collectionName;
             this.item = item;
+            this.Action = action;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ObjectManagementSystemFrontend.Models;
+using ObjectManagementSystemFrontend.Services.Events;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -45,7 +46,7 @@ namespace ObjectManagementSystemFrontend.Services
                 if (selectedObject != value)
                 {
                     selectedObject = value;
-                    SelectedObjectChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(null, value));
+                    SelectedObjectChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(value, StateChangeActionEnum.Update));
                 }
             
             }
@@ -79,12 +80,12 @@ namespace ObjectManagementSystemFrontend.Services
         /// <summary>
         /// Notifies on a change in the collection <see cref="Relationships"/>
         /// </summary>
-        public event EventHandler<ObservableCollection<Relationship>> RelationshipsChanged;
+        public event EventHandler<Relationship> RelationshipsChanged;
 
         /// <summary>
         /// Notifies on a change in the collection <see cref="GeneralObjects"/>
         /// </summary>
-        public event EventHandler<ObservableCollection<GeneralObject>> GeneralObjectsChanged;
+        public event EventHandler<GeneralObject> GeneralObjectsChanged;
 
         /// <summary>
         /// Notifies on a change in a property of any item in the collection <see cref="GeneralObjects"/>
@@ -158,41 +159,111 @@ namespace ObjectManagementSystemFrontend.Services
 
         private async void OnGeneralObjectsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<GeneralObject>>("GeneralObjects", GeneralObjects));
+            var stateChangeAction = e.Action == NotifyCollectionChangedAction.Add ? StateChangeActionEnum.Add :
+                                    e.Action == NotifyCollectionChangedAction.Remove ? StateChangeActionEnum.Remove :
+                                    StateChangeActionEnum.Default;
 
-            if (dataIsInitialized)
+            switch (stateChangeAction)
             {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        await dataPersistenceService.CreateGeneralObject(e.NewItems?.Cast<GeneralObject>().FirstOrDefault());
-                        break;
+                case StateChangeActionEnum.Add:
 
-                    case NotifyCollectionChangedAction.Remove:
-                        
+                    var addObject = e.NewItems?.Cast<GeneralObject>().FirstOrDefault();
+
+                    GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(addObject, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
+                        await dataPersistenceService.CreateGeneralObject(addObject);
+                    }
+
+                    break;
+
+                case StateChangeActionEnum.Remove:
+
+                    var removeObject = e.OldItems?.Cast<GeneralObject>().FirstOrDefault();
+
+                    GeneralObjectsChanged?.Invoke(this, new StateChangedEventArgs<GeneralObject>(removeObject, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
                         //TODO: handle hanging relationships when removing an object
-                        await dataPersistenceService.DeleteGeneralObject(e.OldItems?.Cast<GeneralObject>().FirstOrDefault());
-                        break;
-                }
-            };
+                        await dataPersistenceService.DeleteGeneralObject(removeObject);
+                    }
+
+                    break;
+            }
         }
 
         private async void OnRelationshipsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<ObservableCollection<Relationship>>("Relationships", Relationships));
+            var stateChangeAction = e.Action == NotifyCollectionChangedAction.Add ? StateChangeActionEnum.Add :
+                        e.Action == NotifyCollectionChangedAction.Remove ? StateChangeActionEnum.Remove :
+                        StateChangeActionEnum.Default;
 
-            if (dataIsInitialized)
+            switch (stateChangeAction)
             {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        await dataPersistenceService.CreateRelationship(e.NewItems?.Cast<Relationship>().FirstOrDefault());
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        await dataPersistenceService.DeleteRelationship(e.OldItems?.Cast<Relationship>().FirstOrDefault());
-                        break;
-                }
-            };
+                case StateChangeActionEnum.Add:
+
+                    var addRelationship = e.NewItems?.Cast<Relationship>().FirstOrDefault();
+
+                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<Relationship>(addRelationship, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
+                        await dataPersistenceService.CreateRelationship(addRelationship);
+                    }
+
+                    break;
+
+                case StateChangeActionEnum.Remove:
+
+                    var removeRelationship = e.NewItems?.Cast<Relationship>().FirstOrDefault();
+
+                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<Relationship>(removeRelationship, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
+                        await dataPersistenceService.DeleteRelationship(removeRelationship);
+                    }
+
+                    break;
+            }
+        }
+
+        private async void OnRelationshipsCollectionChanged<T>(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            var stateChangeAction = e.Action == NotifyCollectionChangedAction.Add ? StateChangeActionEnum.Add :
+                        e.Action == NotifyCollectionChangedAction.Remove ? StateChangeActionEnum.Remove :
+                        StateChangeActionEnum.Default;
+
+            switch (stateChangeAction)
+            {
+                case StateChangeActionEnum.Add:
+
+                    var addRelationship = e.NewItems?.Cast<Relationship>().FirstOrDefault();
+
+                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<Relationship>(addRelationship, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
+                        await dataPersistenceService.CreateRelationship(addRelationship);
+                    }
+
+                    break;
+
+                case StateChangeActionEnum.Remove:
+
+                    var removeRelationship = e.NewItems?.Cast<Relationship>().FirstOrDefault();
+
+                    RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<Relationship>(removeRelationship, stateChangeAction));
+
+                    if (dataIsInitialized)
+                    {
+                        await dataPersistenceService.DeleteRelationship(removeRelationship);
+                    }
+
+                    break;
+            }
         }
     }
 }

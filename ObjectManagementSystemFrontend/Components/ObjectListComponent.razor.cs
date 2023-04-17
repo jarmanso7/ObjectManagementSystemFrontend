@@ -1,5 +1,6 @@
 ﻿using ObjectManagementSystemFrontend.Models;
 using ObjectManagementSystemFrontend.Services;
+using ObjectManagementSystemFrontend.Services.Events;
 using Radzen.Blazor;
 using System.Collections.ObjectModel;
 
@@ -44,7 +45,7 @@ namespace ObjectManagementSystemFrontend.Components
             await dataGrid.Reload();
         }
 
-        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<ObservableCollection<GeneralObject>> e)
+        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
 			this.StateHasChanged();
         }
@@ -72,7 +73,7 @@ namespace ObjectManagementSystemFrontend.Components
 
             generalObjectToUpdate = null;
 
-			await StateManagerService.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>("GeneralObjects", generalObject));
+			await StateManagerService.InvokeObjectItemPropertyChanged(this, new StateChangedEventArgs<GeneralObject>(generalObject, StateChangeActionEnum.Update));
         }
 
 		void OnSelectRow(GeneralObject selectedObject)
