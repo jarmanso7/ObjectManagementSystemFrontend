@@ -176,9 +176,17 @@ namespace ObjectManagementSystemFrontend.Components
 
         private void Refresh()
         {
-            relationships = StateManagerService.Relationships.Where(r => r.From.Id == selectedObject.Id || r.To.Id == selectedObject.Id).ToList();
+            if (selectedObject != null)
+            {
+                relationships = StateManagerService.Relationships.Where(r => r.From.Id == selectedObject.Id || r.To.Id == selectedObject.Id).ToList();
+            }
+            else
+            {
+                relationships.Clear();
+            }
 
             Reset();
+            dataGrid.Reload();
 
             this.StateHasChanged();
         }

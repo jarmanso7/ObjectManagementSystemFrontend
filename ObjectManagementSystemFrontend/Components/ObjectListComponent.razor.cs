@@ -16,6 +16,8 @@ namespace ObjectManagementSystemFrontend.Components
 		private GeneralObject generalObjectToInsert;
 		private GeneralObject generalObjectToUpdate;
 
+		IList<GeneralObject> selectedObjects;
+
         void Reset()
         {
             generalObjectToInsert = null;
@@ -29,6 +31,12 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
 			StateManagerService.ObjectItemPropertyChanged += OnObjectItemPropertyChanged;
 			StateManagerService.Reload += OnReloadRequest;
+        }
+
+		private void ClearSelection()
+		{
+			StateManagerService.SelectedObject = null;
+			selectedObjects = null;
         }
 
         private async void OnReloadRequest(object? sender, EventArgs e)
@@ -70,7 +78,10 @@ namespace ObjectManagementSystemFrontend.Components
 		void OnSelectRow(GeneralObject selectedObject)
 		{
 			StateManagerService.SelectedObject = selectedObject;
-		}
+
+			selectedObjects = null;
+			selectedObjects = new List<GeneralObject> { selectedObject };
+        }
 
         async Task SaveRow(GeneralObject generalObject)
 		{

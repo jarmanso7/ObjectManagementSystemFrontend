@@ -18,8 +18,6 @@ namespace ObjectManagementSystemFrontend.Components
 
 		private List<Relationship> relationships;
 
-        private GeneralObject selectedObject;
-
 		protected override async Task OnInitializedAsync()
 		{
 			await base.OnInitializedAsync();
@@ -33,28 +31,23 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
 
             StateManagerService.Reload += OnReloadRequest;
-
-            Diagram.RegisterModelComponent<SelectedNode, SelectedNodeWidget>();
         }
 
         private void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
         {
-            //if (selectedObject != null)
-            //{
-            //    var unselectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == selectedObject.Id);
-            //}
+            if(args?.Item?.Name == null)
+            {
+                return;
+            }
 
             var selectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == args.Item.Id);
-
-            var asdf = new SelectedNode(selectedNode.Position, shape: Shapes.Rectangle);
-
-            Diagram.Nodes.Remove(selectedNode);
-
-            Diagram.Nodes.Add(asdf);
-            //unselectedNode
-            //selectedObject = new SelectedNode(unselectedNode.)
-
-            Diagram.Refresh();
+            
+            if (selectedNode == null)
+            {
+                return;
+            }
+            
+            selectedNode.Title = args.Item.Name;
         }
 
         private void OnReloadRequest(object? sender, EventArgs e)
@@ -162,12 +155,6 @@ namespace ObjectManagementSystemFrontend.Components
 
                 StateManagerService.Reload -= OnReloadRequest;
             }
-        }
-
-        class SelectedNode : NodeModel
-        {
-            public SelectedNode(Point position = null, ShapeDefiner shape = null) : base(position, RenderLayer.HTML, shape)
-            { }
         }
     }
 }
