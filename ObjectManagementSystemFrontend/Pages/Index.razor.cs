@@ -3,6 +3,10 @@
 
 namespace ObjectManagementSystemFrontend.Pages
 {
+    /// <summary>
+    /// Main page of the application that contains the 3 individual components Graph, List of Objects and List of Relationships.
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Components.ComponentBase" />
     public partial class Index
 	{
 		private GraphComponent graphComponent;

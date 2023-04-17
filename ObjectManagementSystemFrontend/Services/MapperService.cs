@@ -5,8 +5,8 @@ using System.Collections.ObjectModel;
 namespace ObjectManagementSystemFrontend.Services
 {
     /// <summary>
-    ///     Provides conversion methods between DTOs and Model classes.
-    ///     The conversion from JSON to DTO is handled in <see cref="HttpService"/>
+    /// Provides conversion methods between DTOs and Model classes.
+    /// The conversion from JSON to DTO is handled in <see cref="HttpService"/>
     /// </summary>
     public class MapperService
     {
