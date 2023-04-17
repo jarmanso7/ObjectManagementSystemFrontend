@@ -2,7 +2,6 @@
 using ObjectManagementSystemFrontend.Services;
 using ObjectManagementSystemFrontend.Services.Events;
 using Radzen.Blazor;
-using System.Collections.ObjectModel;
 
 namespace ObjectManagementSystemFrontend.Components
 {
@@ -13,6 +12,9 @@ namespace ObjectManagementSystemFrontend.Components
     public partial class ObjectListComponent : IDisposable
 	{
 		private RadzenDataGrid<GeneralObject> dataGrid;
+
+		private RadzenDropDown<GeneralObject> searchName;
+		private RadzenDropDown<GeneralObject> searchDescription;
 
 		private GeneralObject generalObjectToInsert;
 		private GeneralObject generalObjectToUpdate;
@@ -37,8 +39,20 @@ namespace ObjectManagementSystemFrontend.Components
 		private void ClearSelection()
 		{
 			StateManagerService.SelectedObject = null;
-			selectedObjects = null;
+            selectedObjects = null;
+
+            ClearFilters();
         }
+
+		private void ClearFilters()
+		{
+			foreach(var column in dataGrid.ColumnsCollection)
+			{
+				column.ClearFilters();
+			}
+
+			dataGrid.Reload();
+		}
 
         private async void OnReloadRequest(object? sender, EventArgs e)
         {

@@ -12,6 +12,30 @@
         <ChildContent>
             <RadzenButton Click="@InsertRow" ButtonStyle="ButtonStyle.Success" Shade="Shade.Lighter" Size="ButtonSize.Small" Icon="add_circle_outline" class="mt-2 mb-2" Text="Add New" Disabled=@(generalObjectToInsert != null || generalObjectToUpdate != null) />
             <RadzenButton Click="@ClearSelection" Text="Clear Selection" Shade="Shade.Lighter" Size="ButtonSize.Small" class="mt-2 mb-2" Disabled=@(StateManagerService.SelectedObject == null) />
+            
+            <RadzenDropDown
+                            @ref="searchName"
+                            ClearSearchAfterSelection="true"
+                            Placeholder="Name..."
+                            AllowClear="true"
+                            @bind-Value=StateManagerService.SelectedObject
+                            AllowVirtualization="true"
+                            AllowFiltering="true"
+                            Data=@StateManagerService.GeneralObjects
+                            TextProperty="Name"
+                            Style="width: 100%; max-width: 130px;" />
+
+            <RadzenDropDown @ref="searchDescription"
+                            ClearSearchAfterSelection="true"
+                            Placeholder="Description..."
+                            AllowClear="true"
+                            @bind-Value=StateManagerService.SelectedObject
+                            AllowVirtualization="true"
+                            AllowFiltering="true"
+                            Data=@StateManagerService.GeneralObjects
+                            TextProperty="Description"
+                            Style="width: 100%; max-width: 300px;" />
+            
             <RadzenDataGrid @ref="dataGrid" AllowAlternatingRows="false" AllowFiltering="true" AllowPaging="true" PageSize="5" AllowSorting="true" EditMode="DataGridEditMode.Single"
                             Data="@StateManagerService.GeneralObjects" TItem="GeneralObject" RowUpdate="@OnUpdateRow" RowCreate="@OnCreateRow" RowSelect="@OnSelectRow" Sort="@Reset" Page="@Reset" Filter="@Reset" ColumnWidth="260px"
                             SelectionMode="DataGridSelectionMode.Single" EmptyText=@NoRecordsText() @bind-Value="@selectedObjects">
