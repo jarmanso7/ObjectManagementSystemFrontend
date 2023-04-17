@@ -18,9 +18,13 @@ namespace ObjectManagementSystemFrontend.Components
 
 		private List<Relationship> relationships;
 
+        private GeneralObject selectedObject;
+
 		protected override async Task OnInitializedAsync()
 		{
 			await base.OnInitializedAsync();
+
+            StateManagerService.SelectedObjectChanged += OnSelectedObjectChanged;
 
             StateManagerService.GeneralObjectsChanged += OnGeneralObjectsChanged;
             StateManagerService.RelationshipsChanged += OnRelationshipsChanged;
@@ -29,6 +33,28 @@ namespace ObjectManagementSystemFrontend.Components
             StateManagerService.RelationshipItemPropertyChanged += OnRelationshipItemPropertyChanged;
 
             StateManagerService.Reload += OnReloadRequest;
+
+            Diagram.RegisterModelComponent<SelectedNode, SelectedNodeWidget>();
+        }
+
+        private void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
+        {
+            //if (selectedObject != null)
+            //{
+            //    var unselectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == selectedObject.Id);
+            //}
+
+            var selectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == args.Item.Id);
+
+            var asdf = new SelectedNode(selectedNode.Position, shape: Shapes.Rectangle);
+
+            Diagram.Nodes.Remove(selectedNode);
+
+            Diagram.Nodes.Add(asdf);
+            //unselectedNode
+            //selectedObject = new SelectedNode(unselectedNode.)
+
+            Diagram.Refresh();
         }
 
         private void OnReloadRequest(object? sender, EventArgs e)
@@ -36,9 +62,16 @@ namespace ObjectManagementSystemFrontend.Components
             LoadData();
         }
 
+        /// <summary>
+        /// Update Node title if the object's name changes
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="StateChangedEventArgs{GeneralObject}"/> instance containing the event data.</param>
         private void OnObjectItemPropertyChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
-            Console.WriteLine($"GraphComponent: OnObjectItemPropertyChanged, object Name: {e.Item.Name}");
+            Diagram.Nodes.FirstOrDefault(n => n.Id == e.Item.Id).Title = e.Item.Name;
+
+            Diagram.Refresh();
         }
         private void OnRelationshipItemPropertyChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
@@ -119,6 +152,8 @@ namespace ObjectManagementSystemFrontend.Components
         {
             if (StateManagerService != null)
             {
+                StateManagerService.SelectedObjectChanged -= OnSelectedObjectChanged;
+
                 StateManagerService.GeneralObjectsChanged -= OnGeneralObjectsChanged;
                 StateManagerService.RelationshipsChanged -= OnRelationshipsChanged;
 
@@ -127,6 +162,12 @@ namespace ObjectManagementSystemFrontend.Components
 
                 StateManagerService.Reload -= OnReloadRequest;
             }
+        }
+
+        class SelectedNode : NodeModel
+        {
+            public SelectedNode(Point position = null, ShapeDefiner shape = null) : base(position, RenderLayer.HTML, shape)
+            { }
         }
     }
 }

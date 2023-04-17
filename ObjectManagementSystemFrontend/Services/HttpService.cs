@@ -65,9 +65,9 @@ namespace ObjectManagementSystemFrontend.Services
         /// <param name="generalObjectDTO">The general object dto.</param>
         public async Task DeleteGeneralObjectRequest(GeneralObjectDTO generalObjectDTO)
         {
-            var deleteUri = GetApiEndpoint(objectsEndpoint) + generalObjectDTO.Id;
+            var deleteUri = GetApiEndpoint(objectsEndpoint) + "/" + generalObjectDTO.Id;
 
-            await httpClient.DeleteFromJsonAsync<string>(deleteUri);
+            await httpClient.DeleteAsync(deleteUri);
         }
 
         /// <summary>
@@ -76,9 +76,9 @@ namespace ObjectManagementSystemFrontend.Services
         /// <param name="RelationshipDTO">The relationship dto.</param>
         public async Task DeleteRelationshiptRequest(RelationshipDTO relationshipDTO)
         {
-            var deleteUri = GetApiEndpoint(relationshipsEndpoint) + relationshipDTO.Id;
+            var deleteUri = GetApiEndpoint(relationshipsEndpoint) + "/" + relationshipDTO.Id;
 
-            await httpClient.DeleteFromJsonAsync<string>(deleteUri);
+            await httpClient.DeleteAsync(deleteUri);
         }
 
         /// <summary>
