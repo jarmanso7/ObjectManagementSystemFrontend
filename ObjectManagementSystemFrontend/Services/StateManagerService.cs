@@ -217,7 +217,7 @@ namespace ObjectManagementSystemFrontend.Services
 
                 case StateChangeActionEnum.Remove:
 
-                    var removeRelationship = e.NewItems?.Cast<Relationship>().FirstOrDefault();
+                    var removeRelationship = e.OldItems?.Cast<Relationship>().FirstOrDefault();
 
                     RelationshipsChanged?.Invoke(this, new StateChangedEventArgs<Relationship>(removeRelationship, stateChangeAction));
 

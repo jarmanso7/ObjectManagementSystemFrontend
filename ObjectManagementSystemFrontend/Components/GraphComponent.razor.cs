@@ -67,18 +67,6 @@ namespace ObjectManagementSystemFrontend.Components
 			Diagram.SetZoom(0.5);
         }
 
-        private string GraphTitle()
-        {
-            var selectedObjectName = StateManagerService.SelectedObject?.Name;
-
-            if (string.IsNullOrEmpty(selectedObjectName))
-            {
-                return "Graph";
-            }
-
-            return $"{selectedObjectName}'s Graph";
-        }
-
         /// <summary>
         /// Handles visualization of each element in the graph according to the selected object by the user.
         /// </summary>
@@ -86,23 +74,30 @@ namespace ObjectManagementSystemFrontend.Components
         /// <param name="args">The <see cref="StateChangedEventArgs{GeneralObject}"/> instance containing the event data.</param>
         private async void OnSelectedObjectChanged(object src, StateChangedEventArgs<GeneralObject> args)
         {
-            if (args?.Item?.Name == null)
+            await RefreshElementsVisibility();
+        }
+
+        private async Task RefreshElementsVisibility()
+        {
+            if (StateManagerService.SelectedObject == null)
             {
                 await JSRuntime.InvokeVoidAsync("showAllNodes");
+                await JSRuntime.InvokeVoidAsync("showAllLinks");
                 return;
             }
 
-            var selectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == args.Item.Id);
+            var selectedNode = Diagram.Nodes.FirstOrDefault(n => n.Id == StateManagerService.SelectedObject.Id);
 
             if (selectedNode == null)
             {
                 await JSRuntime.InvokeVoidAsync("showAllNodes");
+                await JSRuntime.InvokeVoidAsync("showAllLinks");
                 return;
             }
 
-            selectedNode.Title = args.Item.Name;
+            selectedNode.Title = StateManagerService.SelectedObject.Name;
 
-            await ShowOnlyRelatedObjects(args.Item.Id);
+            await ShowOnlyRelatedObjects(StateManagerService.SelectedObject.Id);
         }
 
         /// <summary>
@@ -147,7 +142,7 @@ namespace ObjectManagementSystemFrontend.Components
         {
         }
 
-        private void OnRelationshipsChanged(object? sender, StateChangedEventArgs<Relationship> e)
+        private async void OnRelationshipsChanged(object? sender, StateChangedEventArgs<Relationship> e)
         {
             switch (e.Action)
             {
@@ -162,13 +157,14 @@ namespace ObjectManagementSystemFrontend.Components
                     break;
 
                 case StateChangeActionEnum.Remove:
-
                     Diagram.Links.Remove(Diagram.Links.First(n => n.Id == e.Item.Id));
                     break;
             }
+
+            await RefreshElementsVisibility();
         }
 
-        private void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
+        private async void OnGeneralObjectsChanged(object? sender, StateChangedEventArgs<GeneralObject> e)
         {
             switch (e.Action)
             {
@@ -183,9 +179,10 @@ namespace ObjectManagementSystemFrontend.Components
 
                 case StateChangeActionEnum.Remove:
                     Diagram.Nodes.Remove(Diagram.Nodes.FirstOrDefault(n => n.Id == e.Item.Id));
-
                     break;
             }
+
+            await RefreshElementsVisibility();
         }
 
         /// <summary>

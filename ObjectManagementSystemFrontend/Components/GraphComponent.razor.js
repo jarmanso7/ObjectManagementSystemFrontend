@@ -37,3 +37,7 @@ window.hideLinks = (hiddenLinksId) => {
 window.hideAllLinks = () => {
     document.querySelectorAll('[data-link-id]').forEach((element) => { element.style.visibility = 'hidden'; });
 }
+
+window.highlightSelectedNode = () => {
+
+}
