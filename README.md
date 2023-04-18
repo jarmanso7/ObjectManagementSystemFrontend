@@ -50,9 +50,9 @@ The frontend is made up of a single page web application made in [Blazor](https:
 - As a server side .NET hosted application
 - As a client side application running entirely on the browser via [WebAssembly](https://webassembly.org/).
 
-The latter has been chosen for this project. The Blazor WASM application is hosted as an (Azure Static Web App)[https://azure.microsoft.com/en-us/products/app-service/static]. In the frontend they are used 2 different Blazor libraries for the following purposes:
+The latter has been chosen for this project. The Blazor WASM application is hosted as an [Azure Static Web App](https://azure.microsoft.com/en-us/products/app-service/static). In the frontend they are used 2 different Blazor libraries for the following purposes:
 
-- [Radzen](https://www.radzen.com/]https://github.com/Blazor-Diagrams/Blazor.Diagrams): a UI library that provides many useful controls to build up Web Applications in Blazor. It is used in the grid components of the application.
+- [Radzen](https://www.radzen.com/): a UI library that provides many useful controls to build up Web Applications in Blazor. It is used in the grid components of the application.
 - [Blazor.Diagrams](https://github.com/Blazor-Diagrams/Blazor.Diagrams): a Blazor library that provides components to display data in graphs. In the Object Management System app it is used in the Graph component.
 
 ## Design considerations
