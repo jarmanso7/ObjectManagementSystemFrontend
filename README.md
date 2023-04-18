@@ -1,5 +1,5 @@
 # Object Management System (Frontend)
-Frontend project for the sample Object Management System application. The backend repository is at https://github.com/jarmanso7/ObjectManagementSystemApi.
+Frontend project for the Object Management System sample application. The backend repository is at https://github.com/jarmanso7/ObjectManagementSystemApi.
 
 ## Functional overview
 
@@ -61,6 +61,8 @@ Most of the transformation, searching and filtering is done in the frontend part
 
 The role of the backend API for the most part is that of a mere middleman between the frontend app and the storage in the DB. If the application was to scale and deal with a large number of objects and relationships, a redesign should be considered and change the current philosophy, likely reaching a tradeoff between the size of the backend calls and the amount of records the UI components have to deal with.
 
-To structure the code of the solution, I tried to adhere to the clean architecture design (Domain, Application, Presentation and Infrastructure layers) in the backend solution as well as other good practices such as dependency inversion. As required, I have commented the code (mostly the classes definitions and members) but I believe that in general developers should try to write self explanatory code and refrain from commenting too much. In any case, please don't hesitate to reach out to discuss any part of my proposed solution.
+To structure the code of the solution, I tried to adhere to the clean architecture design (Domain, Application, Presentation and Infrastructure layers) in the backend solution as well as other good practices such as dependency inversion. As required, I have commented the code (mostly the classes definitions and members) but I believe that in general developers should try to write self explanatory code and refrain from commenting too much.
 
-Thank you very much for your time.
+__________________________________________
+
+Please don't hesitate to contact (jordi.armangue@hotmail.com) to discuss any part of this project.
