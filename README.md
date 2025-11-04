@@ -3,7 +3,7 @@ Frontend project for the Object Management System sample application. The backen
 
 ## Functional overview
 
-Object Management System is a sample web appliaction that lets the user define objects and establish relationships between those objects.
+Object Management System is a sample web application that lets the user define objects and establish relationships between those objects.
 It is a single page web application and it features a lean user interface with three components, grid of Objects, a grid of relationships and a graph:
 
 ![GeneralView](https://user-images.githubusercontent.com/19256433/232626356-adf07dfe-2b42-4d26-a5a8-3004e15e2428.png)
